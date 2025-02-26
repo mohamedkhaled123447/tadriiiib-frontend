@@ -1,14 +1,23 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { useDistribution } from "@/context/UseDistribution";
 import { useCalendar } from "@/context/UseCalendar";
 import { the546 } from "@/core/utils/helper";
 import { useRouter } from "next/router";
-import { Box, Flex, Input, Stack, Button, Heading } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Input,
+  Stack,
+  Button,
+  Heading,
+  Badge,
+} from "@chakra-ui/react";
 import Week546 from "@/components/547/Week546";
 function The546() {
   const router = useRouter();
   const { month, type } = router.query;
-  const { topics, months } = useCalendar();
+  const { topics, months, jobs } = useCalendar();
+  const [curJob, setCurJob] = useState<number>(0);
   const {
     daySubjects,
     dayTopicsDis,
@@ -24,9 +33,11 @@ function The546() {
       dayDistribution.months[Number(month)],
       topics,
       Number(month),
-      type as string
+      type as string,
+      jobs[curJob],
+      curJob
     );
-  }, [daySubjects, dayTopicsDis, dayDistribution, topics]);
+  }, [daySubjects, dayTopicsDis, dayDistribution, topics,curJob]);
   const the546DistributionNight = useMemo(() => {
     return the546(
       nightSubjects,
@@ -34,9 +45,11 @@ function The546() {
       nightDistribution.months[Number(month)],
       topics,
       Number(month),
-      type as string
+      type as string,
+      jobs[curJob],
+      curJob
     );
-  }, [nightSubjects, nightTopicsDis, nightDistribution, topics]);
+  }, [nightSubjects, nightTopicsDis, nightDistribution, topics,curJob]);
   const the546Distribution =
     type === "day" ? the546DistributionDay : the546DistributionNight;
   return (
@@ -50,6 +63,20 @@ function The546() {
           {" "}
           {type === "day" ? "(نهاري)" : "(ليلي)"}
         </Box>
+      </Flex>
+      <Flex gap={2}>
+        {jobs.map((job, index) => (
+          <Badge
+            cursor="pointer"
+            key={index}
+            borderRadius="full"
+            colorScheme={curJob === index ? "green" : "gray"}
+            p={3}
+            onClick={() => setCurJob(index)}
+          >
+            {job.name}
+          </Badge>
+        ))}
       </Flex>
       <Flex gap={4} w="95%">
         <Flex

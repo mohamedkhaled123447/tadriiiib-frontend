@@ -1,15 +1,24 @@
 import { disInterval, MonthData, topicsDis, disWeek, month546, disMonth, day546, day546Data, week546 } from "../types/types"
 import { Subject, Job, Topic } from "../interfaces"
-export const distribute = ({ num, len }: { num: number, len: number }) => {
-  const div = Math.floor(num / len)
-  let rem = num % len
-  const result: number[] = []
+export const distribute = (num: number, len: number) => {
+  const result: number[] = new Array(len).fill(0);
+  if (len * 2 > num) {
+    for (let i = 0; i < len; i++) {
+      if (num > 0) {
+        result[i] = 2;
+        num -= 2;
+      }
+    }
+    return result
+  }
+  const div = Math.floor(num / (len * 2))
+  let rem = num % (len * 2)
   for (let i = 0; i < len; i++) {
     if (rem > 0) {
-      result.push(div + 1)
-      rem--
+      result[i] = div * 2 + 2
+      rem -= 2
     } else {
-      result.push(div)
+      result[i] = div * 2
     }
   }
   return result
@@ -263,7 +272,7 @@ export const nightTopicsDistribution = (subjects: Subject[], nightDistribution: 
   return result
 }
 
-export const the546 = (subjects: Subject[], TopicsDistribution: topicsDis[], month547: disMonth, topics: Topic[], monthId: number, type: string) => {
+export const the546 = (subjects: Subject[], TopicsDistribution: topicsDis[], month547: disMonth, topics: Topic[], monthId: number, type: string, job: Job,jobId:number) => {
   subjects.forEach((subject, subjectId) => {
     const subjectTopics = type === 'day' ? topics.filter((topic) => topic.subject === subject.id && topic.day)
       : topics.filter((topic) => topic.subject === subject.id && topic.night)
@@ -279,6 +288,24 @@ export const the546 = (subjects: Subject[], TopicsDistribution: topicsDis[], mon
         }
       }
     })
+  })
+  subjects.forEach((subject, subjectId) => {
+    if (subject.type === 'specific' && !job.subjects.find(id => id === subject.id)) {
+      const subjectTopics = type === 'day' ? topics.filter((topic) => topic.job === job.id && topic.day)
+        : topics.filter((topic) => topic.job === job.id && topic.night)
+      const topicsDistribution = distribute(month547.the547jobs[jobId].totals.reduce((acc, value) => acc + value, 0), subjectTopics.length)
+      month547.weeks.forEach((week) => {
+        for (let i = 0; i < 7; i++) {
+          if (week.mat[subjectId][i]) {
+            const index = topicsDistribution?.findIndex(value => value > 0)
+            if (index !== -1) {
+              week.the546[subjectId][i] = subjectTopics[index || 0]?.id
+              topicsDistribution[index] -= 2
+            }
+          }
+        }
+      })
+    }
   })
   return month547
 }
