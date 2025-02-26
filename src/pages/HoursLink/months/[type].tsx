@@ -573,6 +573,17 @@ const HoursLink = () => {
       >
         547
       </Button>
+      <Button
+        borderRadius="full"
+        colorScheme="blue"
+        onClick={() =>
+          type === "day"
+            ? router.push("/topicsDistribution/day")
+            : router.push("/topicsDistribution/night")
+        }
+      >
+        مناهج التدريب الثابتة
+      </Button>
     </Stack>
   );
 };

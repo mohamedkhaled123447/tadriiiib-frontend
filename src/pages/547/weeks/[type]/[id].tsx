@@ -144,6 +144,8 @@ const TheWeek547 = () => {
             <Flex gap={4}>
               {months[Number(id)]?.weeks.map((week, weekId) => (
                 <Week
+                  monthId={Number(id)}
+                  weekId={weekId}
                   key={weekId}
                   week={week}
                   weekData={distribution.months[Number(id)]?.weeks[weekId]}
@@ -159,17 +161,30 @@ const TheWeek547 = () => {
           </Stack>
         </Flex>
       </Flex>
-      <Button
-        borderRadius="full"
-        colorScheme="blue"
-        onClick={() =>
-          type === "day"
-            ? router.push(`/545/weeks/day/${id}`)
-            : router.push(`/545/weeks/night/${id}`)
-        }
-      >
-        545
-      </Button>
+      <Flex gap={4}>
+        <Button
+          borderRadius="full"
+          colorScheme="blue"
+          onClick={() =>
+            type === "day"
+              ? router.push(`/545/weeks/day/${id}`)
+              : router.push(`/545/weeks/night/${id}`)
+          }
+        >
+          545
+        </Button>
+        <Button
+          onClick={() => {
+            type === "day"
+              ? router.push(`/546/${id}/day`)
+              : router.push(`/546/${id}/night`);
+          }}
+          colorScheme="blue"
+          borderRadius="full"
+        >
+          546
+        </Button>
+      </Flex>
     </Stack>
   );
 };

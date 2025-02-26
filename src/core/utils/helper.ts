@@ -1,5 +1,5 @@
-import { disInterval, MonthData } from "../types/types"
-import { Subject, Job } from "../interfaces"
+import { disInterval, MonthData, topicsDis, disWeek, month546, disMonth, day546, day546Data, week546 } from "../types/types"
+import { Subject, Job, Topic } from "../interfaces"
 export const distribute = ({ num, len }: { num: number, len: number }) => {
   const div = Math.floor(num / len)
   let rem = num % len
@@ -177,7 +177,7 @@ export const monthsDistribution = (jobs: Job[], months: MonthData[], subjects: S
   months.forEach((month: any, monthId: number) => {
     month.weeks.forEach((week: any, weekId: number) => {
       const weekDistribution = daysDistribution(subjects, week, finalDistribution.months[monthId].mat.map((row) => row[weekId]), type)
-      finalDistribution.months[monthId].weeks.push({ cols: weekDistribution.cols, rows: weekDistribution.rows, mat: weekDistribution.mat, the545: weekDistribution.the545 })
+      finalDistribution.months[monthId].weeks.push({ cols: weekDistribution.cols, rows: weekDistribution.rows, mat: weekDistribution.mat, the545: weekDistribution.the545, the546: create2DArray(subjects.length, 7, -1) })
     })
   })
   return finalDistribution
@@ -200,3 +200,85 @@ const matrixEvenDistribution = (rows: number[], cols: number[]) => {
   return { mat, cols, rows }
 }
 
+
+export const dayTopicsDistribution = (subjects: Subject[], dayDistribution: disInterval, topics: Topic[]) => {
+  const result: topicsDis[] = []
+  subjects.forEach((subject, index) => {
+    const subjectTopics = topics.filter((topic) => topic.subject === subject.id && topic.day)
+    let subjectTotal = dayDistribution.mat[index].reduce((acc, value) => acc + value, 0)
+
+    let col: number[] = Array(subjectTopics.length).fill(0)
+    let row: number[] = [...dayDistribution.mat[index]]
+    const topicDistribution = create2DArray(col.length, row.length, 0)
+    for (let i = 0; i < 100; i++) {
+      for (let j = 0; j < subjectTopics.length; j++) {
+        if (subjectTotal) {
+          col[j] += 2
+          subjectTotal -= 2;
+        }
+      }
+    }
+    for (let i = 0; i < col.length; i++) {
+      for (let j = 0; j < row.length; j++) {
+        const temp = Math.min(row[j], col[i])
+        topicDistribution[i][j] = temp
+        row[j] -= temp
+        col[i] -= temp
+
+      }
+    }
+    result.push({ subject: subject.id, mat: topicDistribution })
+  })
+  return result
+}
+export const nightTopicsDistribution = (subjects: Subject[], nightDistribution: disInterval, topics: Topic[]) => {
+  const result: topicsDis[] = []
+  subjects.forEach((subject, index) => {
+    const subjectTopics = topics.filter((topic) => topic.subject === subject.id && topic.night)
+    let subjectTotal = nightDistribution.mat[index].reduce((acc, value) => acc + value, 0)
+
+    let col: number[] = Array(subjectTopics.length).fill(0)
+    let row: number[] = [...nightDistribution.mat[index]]
+    const topicDistribution = create2DArray(col.length, row.length, 0)
+    for (let i = 0; i < 100; i++) {
+      for (let j = 0; j < subjectTopics.length; j++) {
+        if (subjectTotal) {
+          col[j] += 2
+          subjectTotal -= 2;
+        }
+      }
+    }
+    for (let i = 0; i < col.length; i++) {
+      for (let j = 0; j < row.length; j++) {
+        const temp = Math.min(row[j], col[i])
+        topicDistribution[i][j] = temp
+        row[j] -= temp
+        col[i] -= temp
+
+      }
+    }
+    result.push({ subject: subject.id, mat: topicDistribution })
+
+  })
+  return result
+}
+
+export const the546 = (subjects: Subject[], TopicsDistribution: topicsDis[], month547: disMonth, topics: Topic[], monthId: number, type: string) => {
+  subjects.forEach((subject, subjectId) => {
+    const subjectTopics = type === 'day' ? topics.filter((topic) => topic.subject === subject.id && topic.day)
+      : topics.filter((topic) => topic.subject === subject.id && topic.night)
+    const topicsDistribution = TopicsDistribution.find((item) => item.subject === subject.id)?.mat.map(row => [...row]) || [][5]
+    month547.weeks.forEach((week) => {
+      for (let i = 0; i < 7; i++) {
+        if (week.mat[subjectId][i]) {
+          const index = topicsDistribution?.findIndex(row => row[monthId] > 0)
+          if (index !== -1) {
+            week.the546[subjectId][i] = subjectTopics[index || 0]?.id
+            topicsDistribution[index][monthId] -= 2
+          }
+        }
+      }
+    })
+  })
+  return month547
+}

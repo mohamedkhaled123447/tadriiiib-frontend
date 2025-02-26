@@ -22,10 +22,10 @@ export default function Home() {
   const router = useRouter();
   const toast = useToast();
   const { topics, setTopics, subjects } = useCalendar();
+  const [tempTopics, setTempTopics] = useState<Topic[]>([...topics]);
   const [subject, setSubject] = useState<number>(0);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [editingTopic, setEditingTopic] = useState<Topic | null>(null);
-
   const handleAdd = async (topic: Topic) => {
     const res = await fetch(`${BASE_SERVER_URL}/api/topic/`, {
       method: "POST",
@@ -113,8 +113,11 @@ export default function Home() {
             placeholder="المادة"
             onChange={(e) => setSubject(Number(e.target.value))}
           >
-            {subjects.map((subject,index) => (
-              <option key={index} value={subject.id}> {subject.name}</option>
+            {subjects.map((subject, index) => (
+              <option key={index} value={subject.id}>
+                {" "}
+                {subject.name}
+              </option>
             ))}
           </Select>
           {topics
@@ -141,6 +144,12 @@ export default function Home() {
               >
                 <Box w="48" fontWeight="bold">
                   {topic.name}
+                </Box>
+                <Box w="48" fontSize="xl">
+                  مستوي {topic.topic_class}
+                </Box>
+                <Box w="48" fontSize="xl">
+                  درجة الصعوبة {topic.level}
                 </Box>
                 <Box>
                   <Checkbox size="lg" isChecked={topic.day}>
@@ -173,6 +182,27 @@ export default function Home() {
                   >
                     حذف
                   </Button>
+                  <Checkbox
+                    fontWeight="bold"
+                    ms={4}
+                    size="lg"
+                    isChecked={
+                      tempTopics.find((tempTopic) => tempTopic.id === topic.id)
+                        ? true
+                        : false
+                    }
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setTempTopics((pre) => [...pre, topic]);
+                      } else {
+                        setTempTopics((pre) =>
+                          pre.filter((tempTopic) => tempTopic.id !== topic.id)
+                        );
+                      }
+                    }}
+                  >
+                    اختيار
+                  </Checkbox>
                 </Box>
               </Flex>
             ))}
@@ -196,7 +226,10 @@ export default function Home() {
             borderRadius="full"
             mt={3}
             colorScheme="blue"
-            onClick={() => router.push("/jobs")}
+            onClick={() => {
+              setTopics(tempTopics);
+              router.push("/jobs");
+            }}
           >
             التالي
           </Button>

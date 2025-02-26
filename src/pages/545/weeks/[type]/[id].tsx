@@ -145,6 +145,8 @@ const TheWeek545 = () => {
             <Flex gap={4}>
               {months[Number(id)]?.weeks.map((week, weekId) => (
                 <Week
+                  monthId={Number(id)}
+                  weekId={weekId}
                   key={weekId}
                   week={week}
                   weekData={distribution.months[Number(id)]?.weeks[weekId]}

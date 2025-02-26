@@ -4,6 +4,7 @@ import { WeekData, disWeek } from "@/core/types/types";
 import { Subject } from "@/core/interfaces";
 import { useCalendar } from "@/context/UseCalendar";
 import { BASE_SERVER_URL } from "@/core/utils/constants/urls";
+import { useRouter } from "next/router";
 const numberToArabic: Record<number, string> = {
   1: "الأول",
   2: "الثاني",
@@ -31,7 +32,11 @@ function Week({
   generalSubjects,
   monthName,
   limit,
+  weekId,
+  monthId,
 }: {
+  weekId: number;
+  monthId: number;
   weekData: disWeek;
   week: WeekData;
   type: string;
@@ -41,6 +46,7 @@ function Week({
   monthName: string;
   limit: number;
 }) {
+  const router = useRouter();
   const { monthsData, months } = useCalendar();
   const handlePrint = async () => {
     const res = await fetch(`${BASE_SERVER_URL}/api/545/`, {
@@ -281,9 +287,11 @@ function Week({
         ))}
       </Flex>
       {doc === "545" && (
-        <Button onClick={handlePrint}  colorScheme="blue" borderRadius="full">
-          طباعة
-        </Button>
+        <>
+          <Button onClick={handlePrint} colorScheme="blue" borderRadius="full">
+            طباعة
+          </Button>
+        </>
       )}
     </Stack>
   );

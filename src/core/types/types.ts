@@ -81,4 +81,26 @@ export type disWeek = {
   cols: number[],
   mat: number[][],
   the545: string[][]
+  the546: number[][]
+}
+/************************************ */
+export type topicsDis = {
+  subject: number
+  mat: number[][]
+}
+/*************************************** */
+export type month546 = {
+  monthId: number
+  weeks: week546[]
+}
+export type week546 = {
+  weekId: number
+  days: day546[]
+}
+export type day546 = {
+  data: day546Data[]
+}
+export type day546Data = {
+  subject: string
+  topic: string
 }

@@ -129,6 +129,22 @@ const TopicModal: React.FC<TopicModalProps> = ({
             />
           </FormControl>
           <FormControl mb={3}>
+            <FormLabel>المادة</FormLabel>
+            <Select
+              borderRadius="full"
+              name="subject"
+              value={formData.subject}
+              onChange={handleChange}
+            >
+              {subjects.map((subject, index) => (
+                <option key={index} value={subject.id}>
+                  {" "}
+                  {subject.name}
+                </option>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl mb={3}>
             <FormLabel> المكان</FormLabel>
             <Input
               borderRadius="full"
@@ -198,23 +214,8 @@ const TopicModal: React.FC<TopicModalProps> = ({
               ليلي
             </Checkbox>
           </FormControl>
-          <FormControl mb={3}>
-            <FormLabel>المادة</FormLabel>
-            <Select
-              borderRadius="full"
-              name="subject"
-              value={formData.subject}
-              onChange={handleChange}
-            >
-              {subjects.map((subject, index) => (
-                <option key={index} value={subject.id}>
-                  {" "}
-                  {subject.name}
-                </option>
-              ))}
-            </Select>
-          </FormControl>
-          <FormControl mb={3}>
+
+          {/* <FormControl mb={3}>
             <FormLabel>التخصص</FormLabel>
             <Select
               borderRadius="full"
@@ -228,7 +229,7 @@ const TopicModal: React.FC<TopicModalProps> = ({
                 </option>
               ))}
             </Select>
-          </FormControl>
+          </FormControl> */}
         </ModalBody>
 
         <ModalFooter>

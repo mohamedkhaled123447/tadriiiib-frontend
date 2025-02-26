@@ -1,5 +1,10 @@
 import { Subject } from "@/core/interfaces";
-import { monthsDistribution } from "@/core/utils/helper";
+import {
+  monthsDistribution,
+  dayTopicsDistribution,
+  nightTopicsDistribution,
+  the546
+} from "@/core/utils/helper";
 import {
   useEffect,
   useMemo,
@@ -9,7 +14,7 @@ import {
   ReactNode,
 } from "react";
 import { useCalendar } from "@/context/UseCalendar";
-import { disInterval, MonthData } from "@/core/types/types";
+import { disInterval, MonthData, topicsDis } from "@/core/types/types";
 
 interface DistributionContextType {
   daySubjects: Subject[];
@@ -17,6 +22,8 @@ interface DistributionContextType {
   dayDistribution: disInterval;
   nightDistribution: disInterval;
   months: MonthData[];
+  dayTopicsDis: topicsDis[];
+  nightTopicsDis: topicsDis[];
 }
 
 const DistributionContext = createContext<DistributionContextType | undefined>(
@@ -24,9 +31,10 @@ const DistributionContext = createContext<DistributionContextType | undefined>(
 );
 
 export const DistributionProvider = ({ children }: { children: ReactNode }) => {
-  const { subjectsData, months, jobs } = useCalendar();
+  const { subjectsData, months, jobs, topics } = useCalendar();
   const [daySubjects, setDaySubjects] = useState<Subject[]>([]);
   const [nightSubjects, setNightSubjects] = useState<Subject[]>([]);
+
   const totalDayLearingHours: number = useMemo(() => {
     return months.reduce(
       (acc, month) => (acc += month.totalDayLearningHours),
@@ -59,6 +67,20 @@ export const DistributionProvider = ({ children }: { children: ReactNode }) => {
       "night"
     );
   }, [months, nightSubjects, jobs]);
+  const dayTopicsDis: topicsDis[] = useMemo(() => {
+    return dayTopicsDistribution(daySubjects, dayDistribution, topics);
+  }, [daySubjects, dayDistribution, topics]);
+  const nightTopicsDis: topicsDis[] = useMemo(() => {
+    return nightTopicsDistribution(nightSubjects, nightDistribution, topics);
+  }, [nightSubjects, nightDistribution, topics]);
+//  const test = useMemo(() => {
+//      return the546(
+//        daySubjects,
+//        dayTopicsDis,
+//        dayDistribution.months[0],
+//        topics
+//      );
+//    }, [daySubjects,dayTopicsDis,dayDistribution,topics]);
   useEffect(() => {
     if (totalDayLearingHours) {
       const newSubjectsData: Subject[] = [];
@@ -142,6 +164,8 @@ export const DistributionProvider = ({ children }: { children: ReactNode }) => {
         dayDistribution,
         nightDistribution,
         months,
+        dayTopicsDis,
+        nightTopicsDis,
       }}
     >
       {children}
