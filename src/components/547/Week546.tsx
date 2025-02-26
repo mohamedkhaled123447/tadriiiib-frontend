@@ -23,6 +23,15 @@ const numberToArabic: Record<number, string> = {
   6: "السادس",
   7: "السابع",
 };
+const ToArabic: Record<number, string> = {
+  1: "الأول",
+  2: "الثاني",
+  3: "الثالث",
+  4: "الرابع",
+  5: "الخامس",
+  6: "السادس",
+  7: "السابع",
+};
 const numberToDay: Record<number, string> = {
   1: "السبت",
   2: "الاحد",
@@ -202,8 +211,8 @@ function Week546({
                         borderRadius="xl"
                       >
                         {type === "day"
-                          ? "الفترة" + numberToArabic[index + 1]
-                          : "الفترة" + numberToArabic[index + 1 + 3]}
+                          ? "الفترة " + ToArabic[index + 1]
+                          : "الفترة " + ToArabic[index + 1 + 3]}
                       </Center>
                       <Box
                         p="2"
@@ -216,7 +225,7 @@ function Week546({
                           {
                             Subjects.find(
                               (subject) => subject.id === topic?.subject
-                            )?.label
+                            )?.label||'تد فني تخصصي'
                           }
                         </Center>
 
