@@ -24,13 +24,13 @@ const numberToArabic: Record<number, string> = {
   7: "السابع",
 };
 const ToArabic: Record<number, string> = {
-  1: "الأول",
-  2: "الثاني",
-  3: "الثالث",
-  4: "الرابع",
-  5: "الخامس",
-  6: "السادس",
-  7: "السابع",
+  1: "الأولي",
+  2: "الثانية",
+  3: "الثالثة",
+  4: "الرابعة",
+  5: "الخامسة",
+  6: "السادسة",
+  7: "السابعة",
 };
 const numberToDay: Record<number, string> = {
   1: "السبت",
