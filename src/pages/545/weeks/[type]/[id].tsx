@@ -104,7 +104,7 @@ const TheWeek545 = () => {
               key={specificSubjects.length + index}
               p="2"
               textAlign="center"
-             bg="blackAlpha.200"
+              bg="blackAlpha.200"
               w="60"
               borderRadius={"xl"}
             >
@@ -162,6 +162,17 @@ const TheWeek545 = () => {
           </Stack>
         </Flex>
       </Flex>
+      <Button
+        onClick={() => {
+          type === "day"
+            ? router.push(`/546/${id}/day`)
+            : router.push(`/546/${id}/night`);
+        }}
+        colorScheme="blue"
+        borderRadius="full"
+      >
+        546
+      </Button>
     </Stack>
   );
 };
