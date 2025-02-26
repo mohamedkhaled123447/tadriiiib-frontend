@@ -272,7 +272,7 @@ export const nightTopicsDistribution = (subjects: Subject[], nightDistribution: 
   return result
 }
 
-export const the546 = (subjects: Subject[], TopicsDistribution: topicsDis[], month547: disMonth, topics: Topic[], monthId: number, type: string, job: Job,jobId:number) => {
+export const the546 = (subjects: Subject[], TopicsDistribution: topicsDis[], month547: disMonth, topics: Topic[], monthId: number, type: string, job: Job, jobId: number) => {
   subjects.forEach((subject, subjectId) => {
     const subjectTopics = type === 'day' ? topics.filter((topic) => topic.subject === subject.id && topic.day)
       : topics.filter((topic) => topic.subject === subject.id && topic.night)
@@ -306,6 +306,20 @@ export const the546 = (subjects: Subject[], TopicsDistribution: topicsDis[], mon
         }
       })
     }
+  })
+  return month547
+}
+export const the548 = (subjects: Subject[], TopicsDistribution: topicsDis[], month547: disMonth, topics: Topic[], monthId: number, type: string, job: Job, jobId: number) => {
+  subjects.forEach((subject, subjectId) => {
+    const frequencyMap = new Map<number, number>();
+    month547.weeks.forEach((week) => {
+      for (let i = 0; i < 7; i++) {
+        if (week.the546[subjectId][i] !== - 1) {
+          frequencyMap.set(week.the546[subjectId][i], (frequencyMap.get(week.the546[subjectId][i]) || 0) + 1);
+        }
+      }
+    })
+    console.log(frequencyMap)
   })
   return month547
 }

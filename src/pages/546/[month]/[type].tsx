@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { useDistribution } from "@/context/UseDistribution";
 import { useCalendar } from "@/context/UseCalendar";
-import { the546 } from "@/core/utils/helper";
+import { the546, the548 } from "@/core/utils/helper";
 import { useRouter } from "next/router";
 import {
   Box,
@@ -37,7 +37,7 @@ function The546() {
       jobs[curJob],
       curJob
     );
-  }, [daySubjects, dayTopicsDis, dayDistribution, topics,curJob]);
+  }, [daySubjects, dayTopicsDis, dayDistribution, topics, curJob]);
   const the546DistributionNight = useMemo(() => {
     return the546(
       nightSubjects,
@@ -49,7 +49,19 @@ function The546() {
       jobs[curJob],
       curJob
     );
-  }, [nightSubjects, nightTopicsDis, nightDistribution, topics,curJob]);
+  }, [nightSubjects, nightTopicsDis, nightDistribution, topics, curJob]);
+  // const the548DistributionNight = useMemo(() => {
+  //   return the548(
+  //     daySubjects,
+  //     dayTopicsDis,
+  //     dayDistribution.months[Number(month)],
+  //     topics,
+  //     Number(month),
+  //     type as string,
+  //     jobs[curJob],
+  //     curJob
+  //   );
+  // }, [nightSubjects, nightTopicsDis, nightDistribution, topics, curJob]);
   const the546Distribution =
     type === "day" ? the546DistributionDay : the546DistributionNight;
   return (
