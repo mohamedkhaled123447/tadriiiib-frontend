@@ -1,4 +1,13 @@
-import { Box, Flex, Input, Stack, Button, Heading } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Input,
+  Stack,
+  Button,
+  Heading,
+  Center,
+  Spinner,
+} from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useDistribution } from "@/context/UseDistribution";
@@ -19,6 +28,27 @@ function TopicsDistribution() {
   const subjects = type === "day" ? daySubjects : nightSubjects;
   const distribution = type === "day" ? dayDistribution : nightDistribution;
   const TopicsDis = type === "day" ? dayTopicsDis : nightTopicsDis;
+  if (
+    !daySubjects.length ||
+    !nightSubjects.length ||
+    !nightDistribution ||
+    !dayDistribution ||
+    !months.length ||
+    !dayTopicsDis.length ||
+    !nightTopicsDis.length
+  ) {
+    return (
+      <Center w="100%" h="100vh">
+        <Spinner
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="blue.500"
+          size="xl"
+        />
+      </Center>
+    );
+  }
   return (
     <Stack spacing={"2"} align={"center"} justify={"center"} my="10">
       <Flex gap={"2"}>
@@ -173,7 +203,7 @@ function TopicsDistribution() {
                         w="36"
                         borderRadius={"xl"}
                       >
-                        {cell||'-'}
+                        {cell || "-"}
                       </Box>
                     ))}
                   </Flex>
@@ -202,7 +232,7 @@ function TopicsDistribution() {
                       w="36"
                       borderRadius={"xl"}
                     >
-                      {cell||'-'}
+                      {cell || "-"}
                     </Box>
                   ))}
                 </Flex>
