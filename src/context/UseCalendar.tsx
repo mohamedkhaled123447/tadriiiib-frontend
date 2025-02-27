@@ -28,8 +28,8 @@ interface CalendarContextType {
   setJobs: Function;
   subjects: SubjectData[];
   setSubjects: Function;
-  topics:Topic[]
-  setTopics:Function
+  topics: Topic[];
+  setTopics: Function;
 }
 
 const CalendarContext = createContext<CalendarContextType | undefined>(
@@ -43,7 +43,6 @@ export const CalendarProvider = ({ children }: { children: ReactNode }) => {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [monthsData, setMonthsData] = useState<interval[]>([]);
   const [months, setMonths] = useState<MonthData[]>([]);
-
   const updateDayType = useCallback(
     (dayId: number, weekId: number, monthId: number, typeId: number) => {
       const updatedMonths = [...months];
@@ -148,6 +147,7 @@ export const CalendarProvider = ({ children }: { children: ReactNode }) => {
   // }, [updateDayType, updateDayTypeCol, updateDayTypeRow]);
 
   useEffect(() => {
+    setMonths(JSON.parse(localStorage.getItem("months") || "[]"));
     fetchData();
   }, []);
 
@@ -171,7 +171,7 @@ export const CalendarProvider = ({ children }: { children: ReactNode }) => {
         subjects,
         setSubjects,
         topics,
-        setTopics
+        setTopics,
       }}
     >
       {children}

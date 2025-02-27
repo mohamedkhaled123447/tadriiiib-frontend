@@ -46,7 +46,6 @@ const Calendar = () => {
 
   const router = useRouter();
   const { id } = router.query;
-
   const [intervalName, setIntervalName] = useState<string>();
   const [section, setSection] = useState<number>(1);
   const [interval, setInterval] = useState<interval>({
@@ -124,7 +123,7 @@ const Calendar = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [id]);
   if (!months.length || !monthsData.length || !types.length)
     return (
       <Center w="100%" h="100vh">

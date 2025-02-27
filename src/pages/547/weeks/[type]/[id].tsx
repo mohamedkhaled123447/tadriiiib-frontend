@@ -1,4 +1,4 @@
-import { Box, Flex, Input, Stack, Button, Heading } from "@chakra-ui/react";
+import { Box, Flex, Input, Stack, Button, Heading,Center,Spinner } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import { useDistribution } from "@/context/UseDistribution";
 import { useRouter } from "next/router";
@@ -23,6 +23,25 @@ const TheWeek547 = () => {
       ? daySubjects.filter((subject) => subject.type === "general")
       : nightSubjects.filter((subject) => subject.type === "general");
   const distribution = type === "day" ? dayDistribution : nightDistribution;
+  if (
+    !daySubjects.length ||
+    !nightSubjects.length ||
+    !nightDistribution ||
+    !dayDistribution ||
+    !months.length
+  ) {
+    return (
+      <Center w="100%" h="100vh">
+        <Spinner
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="blue.500"
+          size="xl"
+        />
+      </Center>
+    );
+  }
   return (
     <Stack spacing={"2"} align={"center"} justify={"center"} my="10">
       <Flex gap={"2"}>

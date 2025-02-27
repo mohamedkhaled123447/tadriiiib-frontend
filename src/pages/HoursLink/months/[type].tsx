@@ -1,4 +1,4 @@
-import { Box, Flex, Input, Stack, Button, Heading } from "@chakra-ui/react";
+import { Box, Flex, Input, Stack, Button, Heading,Center,Spinner } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useDistribution } from "@/context/UseDistribution";
@@ -22,6 +22,25 @@ const HoursLink = () => {
       : nightSubjects.filter((subject) => subject.type === "general");
   const subjects = type === "day" ? daySubjects : nightSubjects;
   const distribution = type === "day" ? dayDistribution : nightDistribution;
+  if (
+    !daySubjects.length ||
+    !nightSubjects.length ||
+    !nightDistribution ||
+    !dayDistribution ||
+    !months.length
+  ) {
+    return (
+      <Center w="100%" h="100vh">
+        <Spinner
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="blue.500"
+          size="xl"
+        />
+      </Center>
+    );
+  }
   return (
     <Stack spacing={"2"} align={"center"} justify={"center"} my="10">
       <Flex gap={"2"}>
@@ -178,7 +197,9 @@ const HoursLink = () => {
                   w="60"
                   borderRadius={"xl"}
                   cursor={"pointer"}
-                  onClick={() => router.push(`/HoursLink/weeks/${type}/${monthId}`)}
+                  onClick={() =>
+                    router.push(`/HoursLink/weeks/${type}/${monthId}`)
+                  }
                 >
                   {month.monthName}
                 </Box>
@@ -400,7 +421,6 @@ const HoursLink = () => {
             )}
             {generalSubjects.map((subject, index) => (
               <Flex gap={4} key={index}>
-                
                 <Box
                   key={index + specificSubjects.length}
                   p="2"
@@ -471,17 +491,17 @@ const HoursLink = () => {
               >
                 {type === "day"
                   ? months.reduce(
-                    (acc, month) =>
-                      acc +
-                      month.totalDayLearningHours +
-                      month.totalBoundEducationHours +
-                      month.totalTrainingHours,
-                    0
-                  )
+                      (acc, month) =>
+                        acc +
+                        month.totalDayLearningHours +
+                        month.totalBoundEducationHours +
+                        month.totalTrainingHours,
+                      0
+                    )
                   : months.reduce(
-                    (acc, month) => acc + month.totalNightLearningHours,
-                    0
-                  )}
+                      (acc, month) => acc + month.totalNightLearningHours,
+                      0
+                    )}
               </Box>
               {months.map((month, index) => (
                 <Box
@@ -494,8 +514,8 @@ const HoursLink = () => {
                 >
                   {type === "day"
                     ? month.totalBoundEducationHours +
-                    month.totalDayLearningHours +
-                    month.totalTrainingHours
+                      month.totalDayLearningHours +
+                      month.totalTrainingHours
                     : month.totalNightLearningHours}
                 </Box>
               ))}

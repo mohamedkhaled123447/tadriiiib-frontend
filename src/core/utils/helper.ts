@@ -140,6 +140,7 @@ export const weeksDistribution = (jobs: Job[], subjects: Subject[], month: Month
   return { ...distributionResult, the547jobs, weeksTotal }
 }
 export const monthsDistribution = (jobs: Job[], months: MonthData[], subjects: Subject[], totalLearingHours: number, type: string) => {
+
   let rows: number[] = []
   let cols: number[] = []
   months.forEach((month: any) => {
@@ -273,6 +274,7 @@ export const nightTopicsDistribution = (subjects: Subject[], nightDistribution: 
 }
 
 export const the546 = (subjects: Subject[], TopicsDistribution: topicsDis[], month547: disMonth, topics: Topic[], monthId: number, type: string, job: Job, jobId: number) => {
+  if (!subjects.length || !job) return month547
   subjects.forEach((subject, subjectId) => {
     const subjectTopics = type === 'day' ? topics.filter((topic) => topic.subject === subject.id && topic.day)
       : topics.filter((topic) => topic.subject === subject.id && topic.night)

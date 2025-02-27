@@ -10,7 +10,9 @@ import {
   Stack,
   Button,
   Heading,
+  Center,
   Badge,
+  Spinner,
 } from "@chakra-ui/react";
 import Week546 from "@/components/547/Week546";
 function The546() {
@@ -37,7 +39,7 @@ function The546() {
       jobs[curJob],
       curJob
     );
-  }, [daySubjects, dayTopicsDis, dayDistribution, topics, curJob]);
+  }, [daySubjects, dayTopicsDis, dayDistribution, topics, curJob, jobs]);
   const the546DistributionNight = useMemo(() => {
     return the546(
       nightSubjects,
@@ -49,7 +51,7 @@ function The546() {
       jobs[curJob],
       curJob
     );
-  }, [nightSubjects, nightTopicsDis, nightDistribution, topics, curJob]);
+  }, [nightSubjects, nightTopicsDis, nightDistribution, topics, curJob, jobs]);
   // const the548DistributionNight = useMemo(() => {
   //   return the548(
   //     daySubjects,
@@ -64,6 +66,19 @@ function The546() {
   // }, [nightSubjects, nightTopicsDis, nightDistribution, topics, curJob]);
   const the546Distribution =
     type === "day" ? the546DistributionDay : the546DistributionNight;
+  if (!topics.length || !months.length || !jobs.length) {
+    return (
+      <Center w="100%" h="100vh">
+        <Spinner
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="blue.500"
+          size="xl"
+        />
+      </Center>
+    );
+  }
   return (
     <Stack spacing={"2"} align={"center"} justify={"center"} my="10">
       <Flex gap={"2"}>

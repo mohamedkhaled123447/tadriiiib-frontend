@@ -1,4 +1,13 @@
-import { Box, Flex, Input, Stack, Button, Heading } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Input,
+  Stack,
+  Button,
+  Heading,
+  Center,
+  Spinner,
+} from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useDistribution } from "@/context/UseDistribution";
@@ -30,6 +39,25 @@ const HoursLink = () => {
       ? daySubjects.filter((subject) => subject.type === "general")
       : nightSubjects.filter((subject) => subject.type === "general");
   const distribution = type === "day" ? dayDistribution : nightDistribution;
+  if (
+    !daySubjects.length ||
+    !nightSubjects.length ||
+    !nightDistribution ||
+    !dayDistribution ||
+    !months.length
+  ) {
+    return (
+      <Center w="100%" h="100vh">
+        <Spinner
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="blue.500"
+          size="xl"
+        />
+      </Center>
+    );
+  }
   return (
     <Stack spacing={"2"} align={"center"} justify={"center"} my="10">
       <Flex gap={"2"}>
@@ -249,7 +277,7 @@ const HoursLink = () => {
             {specificSubjects.map((subject, index) => (
               <Flex gap={4} key={index}>
                 <Box
-                key={index}
+                  key={index}
                   p="2"
                   textAlign="center"
                   bg="blackAlpha.200"
@@ -264,7 +292,7 @@ const HoursLink = () => {
                 {distribution.months[Number(id)]?.mat[index].map(
                   (weekHours: any, rowId: any) => (
                     <Box
-                    key={`${index}-${rowId}`}
+                      key={`${index}-${rowId}`}
                       p="2"
                       textAlign="center"
                       bg="blackAlpha.200"
@@ -328,7 +356,7 @@ const HoursLink = () => {
                 </Box>
                 {months[Number(id)]?.weeks.map((week, index) => (
                   <Box
-                  key={index}
+                    key={index}
                     p="2"
                     textAlign="center"
                     bg="blackAlpha.200"
@@ -352,7 +380,7 @@ const HoursLink = () => {
             {generalSubjects.map((subject, index) => (
               <Flex gap={4} key={index}>
                 <Box
-                key={index + specificSubjects.length}
+                  key={index + specificSubjects.length}
                   p="2"
                   textAlign="center"
                   bg="blackAlpha.200"
@@ -367,7 +395,7 @@ const HoursLink = () => {
                   index + specificSubjects.length
                 ].map((weekHours: any, rowId: any) => (
                   <Box
-                  key={`${index + specificSubjects.length}-${rowId}`}
+                    key={`${index + specificSubjects.length}-${rowId}`}
                     p="2"
                     textAlign="center"
                     bg="blackAlpha.200"
@@ -416,7 +444,7 @@ const HoursLink = () => {
               </Box>
               {months[Number(id)]?.weeks.map((week, index) => (
                 <Box
-                key={index}
+                  key={index}
                   p="2"
                   textAlign="center"
                   bg="blackAlpha.400"
@@ -430,15 +458,15 @@ const HoursLink = () => {
                     : week.totalNightLearningHours}
                 </Box>
               ))}
-               <Box
-                  p="2"
-                  textAlign="center"
-                  bg="blackAlpha.400"
-                  w="60"
-                  borderRadius={"xl"}
-                >
-                  -
-                </Box>
+              <Box
+                p="2"
+                textAlign="center"
+                bg="blackAlpha.400"
+                w="60"
+                borderRadius={"xl"}
+              >
+                -
+              </Box>
             </Flex>
           </Stack>
         </Flex>
