@@ -52,18 +52,6 @@ function The546() {
       curJob
     );
   }, [nightSubjects, nightTopicsDis, nightDistribution, topics, curJob, jobs]);
-  // const the548DistributionNight = useMemo(() => {
-  //   return the548(
-  //     daySubjects,
-  //     dayTopicsDis,
-  //     dayDistribution.months[Number(month)],
-  //     topics,
-  //     Number(month),
-  //     type as string,
-  //     jobs[curJob],
-  //     curJob
-  //   );
-  // }, [nightSubjects, nightTopicsDis, nightDistribution, topics, curJob]);
   const the546Distribution =
     type === "day" ? the546DistributionDay : the546DistributionNight;
   if (!topics.length || !months.length || !jobs.length) {
@@ -91,7 +79,7 @@ function The546() {
           {type === "day" ? "(نهاري)" : "(ليلي)"}
         </Box>
       </Flex>
-      <Flex gap={2}>
+      <Flex gap={2} wrap='wrap' justify='center'>
         {jobs.map((job, index) => (
           <Badge
             cursor="pointer"
@@ -143,6 +131,17 @@ function The546() {
           </Stack>
         </Flex>
       </Flex>
+      <Button
+        onClick={() => {
+          type === "day"
+            ? router.push(`/548/${Number(month)}/${curJob}/day`)
+            : router.push(`/548/${Number(month)}/${curJob}/night`);
+        }}
+        colorScheme="blue"
+        borderRadius="full"
+      >
+        548
+      </Button>
     </Stack>
   );
 }

@@ -311,17 +311,44 @@ export const the546 = (subjects: Subject[], TopicsDistribution: topicsDis[], mon
   })
   return month547
 }
-export const the548 = (subjects: Subject[], TopicsDistribution: topicsDis[], month547: disMonth, topics: Topic[], monthId: number, type: string, job: Job, jobId: number) => {
+export const the548 = (subjects: Subject[], month547: disMonth, topics: Topic[], job: Job) => {
+  const result: { subject: string, total: number, weeks: any }[] = []
+  const temp = {
+    subject: 'تد فني تخصصي', total: 0, weeks: [
+      { weekTotal: 0, frequencyMap: new Map<string, number>() },
+      { weekTotal: 0, frequencyMap: new Map<string, number>() },
+      { weekTotal: 0, frequencyMap: new Map<string, number>() },
+      { weekTotal: 0, frequencyMap: new Map<string, number>() },
+      { weekTotal: 0, frequencyMap: new Map<string, number>() },
+    ]
+  }
   subjects.forEach((subject, subjectId) => {
-    const frequencyMap = new Map<number, number>();
-    month547.weeks.forEach((week) => {
+
+    const weekResult: any[] = []
+    let monthTotal = 0
+    month547.weeks.forEach((week, weekId) => {
+      const frequencyMap = new Map<string, number>();
+      let weekTotal = 0
       for (let i = 0; i < 7; i++) {
         if (week.the546[subjectId][i] !== - 1) {
-          frequencyMap.set(week.the546[subjectId][i], (frequencyMap.get(week.the546[subjectId][i]) || 0) + 1);
+          const topic = topics.find(topic => topic.id === week.the546[subjectId][i])
+          if (topic) {
+            if (subject.type === 'specific' && !job?.subjects.find(value => value === subject.id)) {
+              temp.weeks[weekId].frequencyMap.set(topic?.name, (temp.weeks[weekId].frequencyMap.get(topic?.name) || 0) + week.mat[subjectId][i]);
+              temp.total += week.mat[subjectId][i]
+              temp.weeks[weekId].weekTotal += week.mat[subjectId][i]
+            } else {
+              frequencyMap.set(topic?.name, (frequencyMap.get(topic?.name) || 0) + week.mat[subjectId][i]);
+              weekTotal += week.mat[subjectId][i]
+            }
+          }
         }
       }
+      weekResult.push({ weekTotal, frequencyMap })
+      monthTotal += weekTotal
     })
-    console.log(frequencyMap)
+    if ((subject.type === 'specific' && job?.subjects.find(value => value === subject.id)) || subject.type === 'general')
+      result.push({ subject: subject.label, total: monthTotal, weeks: weekResult })
   })
-  return month547
+  return [temp, ...result]
 }
