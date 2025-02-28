@@ -14,7 +14,7 @@ import {
   Badge,
   Spinner,
 } from "@chakra-ui/react";
-import Week548 from "@/components/547/Week548";
+
 const numberToArabic: Record<number, string> = {
   1: "الأول",
   2: "الثاني",
@@ -183,7 +183,7 @@ function The548() {
                 </Center>
               </Stack>
               {months[Number(month)].weeks.map((week, weekId) => (
-                <Flex gap={2} w="100%">
+                <Flex gap={2} w="100%" key={weekId}>
                   <Stack>
                     <Center
                       p="2"
