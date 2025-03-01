@@ -81,7 +81,7 @@ export type disWeek = {
   cols: number[],
   mat: number[][],
   the545: string[][]
-  the546: number[][]
+  the546: string[][]
 }
 /************************************ */
 export type topicsDis = {

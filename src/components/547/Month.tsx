@@ -14,7 +14,7 @@ function Month({
   limit: number;
 }) {
   return (
-    <Stack spacing={"2"} align={"center"} justify={"center"}>
+    <Stack spacing={"2"} align={"center"} >
       <Stack textAlign="center" w="100%">
         <Box p="2" textAlign="center" bg="blackAlpha.200" borderRadius={"xl"}>
           {month.monthName}

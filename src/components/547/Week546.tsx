@@ -7,7 +7,7 @@ import {
   Heading,
   Divider,
   Center,
-  Box
+  Box,
 } from "@chakra-ui/react";
 import { WeekData, disWeek } from "@/core/types/types";
 import { Subject, Topic } from "@/core/interfaces";
@@ -58,9 +58,14 @@ function Week546({
 }) {
   const Subjects = type === "day" ? daySubjects : nightSubjects;
   return (
-    <Stack spacing={"2"} align={"center"} justify={"center"}>
+    <Stack spacing={"2"} align={"center"} >
       <Stack textAlign="center" w="100%">
-        <Center p="2" textAlign="center" bg="blackAlpha.200" borderRadius={"xl"}>
+        <Center
+          p="2"
+          textAlign="center"
+          bg="blackAlpha.200"
+          borderRadius={"xl"}
+        >
           الاسبوع {numberToArabic[weekId]}
         </Center>
       </Stack>
@@ -82,7 +87,7 @@ function Week546({
             w="36"
             borderRadius={"xl"}
           >
-            الفصائل     
+            الفصائل
           </Center>
           <Center
             p="2"
@@ -198,8 +203,9 @@ function Week546({
                   </Flex>
                 )}
                 {week.the546
-                  .filter((row) => row[dayId] !== -1)
-                  .map((row) => topics.find((topic) => topic.id === row[dayId]))
+                  .filter((row) => row[dayId] !== "-1")
+                  .flatMap((item) => item[dayId].split(",").map(Number))
+                  .map((row) => topics.find((topic) => topic.id === row))
                   .filter((topic) => topic)
                   .map((topic, index) => (
                     <Flex gap={2} key={index}>
@@ -222,14 +228,12 @@ function Week546({
                         borderRadius="xl"
                       >
                         <Center fontWeight="bold">
-                          {
-                            Subjects.find(
-                              (subject) => subject.id === topic?.subject
-                            )?.label||'تد فني تخصصي'
-                          }
+                          {Subjects.find(
+                            (subject) => subject.id === topic?.subject
+                          )?.label || "تد فني تخصصي"}
                         </Center>
 
-                        <Divider h={2}/>
+                        <Divider h={2} />
                         {topic?.name}
                       </Box>
                       <Center

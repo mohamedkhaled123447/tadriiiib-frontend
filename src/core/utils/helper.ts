@@ -187,7 +187,7 @@ export const monthsDistribution = (jobs: Job[], months: MonthData[], subjects: S
   months.forEach((month: any, monthId: number) => {
     month.weeks.forEach((week: any, weekId: number) => {
       const weekDistribution = daysDistribution(subjects, week, finalDistribution.months[monthId].mat.map((row) => row[weekId]), type)
-      finalDistribution.months[monthId].weeks.push({ cols: weekDistribution.cols, rows: weekDistribution.rows, mat: weekDistribution.mat, the545: weekDistribution.the545, the546: create2DArray(subjects.length, 7, -1) })
+      finalDistribution.months[monthId].weeks.push({ cols: weekDistribution.cols, rows: weekDistribution.rows, mat: weekDistribution.mat, the545: weekDistribution.the545, the546: create2DStringArray(subjects.length, 7, ' -1') })
     })
   })
   return finalDistribution
@@ -282,15 +282,15 @@ export const the546 = (subjects: Subject[], TopicsDistribution: topicsDis[], mon
     month547.weeks.forEach((week) => {
 
       for (let i = 0; i < 7; i++) {
-        let temp=[]
-        for(let j=2;j<=week.mat[subjectId][i];j+=2) {
+        let temp = []
+        for (let j = 2; j <= week.mat[subjectId][i]; j += 2) {
           const index = topicsDistribution?.findIndex(row => row[monthId] > 0)
           if (index !== -1) {
-            week.the546[subjectId][i] = subjectTopics[index || 0]?.id
             temp.push(subjectTopics[index || 0]?.id)
             topicsDistribution[index][monthId] -= 2
           }
         }
+        week.the546[subjectId][i] = temp.join(',')
       }
     })
   })
@@ -301,13 +301,15 @@ export const the546 = (subjects: Subject[], TopicsDistribution: topicsDis[], mon
       const topicsDistribution = distribute(month547.the547jobs[jobId].totals.reduce((acc, value) => acc + value, 0), subjectTopics.length)
       month547.weeks.forEach((week) => {
         for (let i = 0; i < 7; i++) {
+          let temp = []
           if (week.mat[subjectId][i]) {
             const index = topicsDistribution?.findIndex(value => value > 0)
             if (index !== -1) {
-              week.the546[subjectId][i] = subjectTopics[index || 0]?.id
+              temp.push(subjectTopics[index || 0]?.id)
               topicsDistribution[index] -= 2
             }
           }
+          week.the546[subjectId][i] = temp.join(',')
         }
       })
     }
@@ -333,18 +335,22 @@ export const the548 = (subjects: Subject[], month547: disMonth, topics: Topic[],
       const frequencyMap = new Map<string, number>();
       let weekTotal = 0
       for (let i = 0; i < 7; i++) {
-        if (week.the546[subjectId][i] !== - 1) {
-          const topic = topics.find(topic => topic.id === week.the546[subjectId][i])
-          if (topic) {
-            if (subject.type === 'specific' && !job?.subjects.find(value => value === subject.id)) {
-              temp.weeks[weekId].frequencyMap.set(topic?.name, (temp.weeks[weekId].frequencyMap.get(topic?.name) || 0) + week.mat[subjectId][i]);
-              temp.total += week.mat[subjectId][i]
-              temp.weeks[weekId].weekTotal += week.mat[subjectId][i]
-            } else {
-              frequencyMap.set(topic?.name, (frequencyMap.get(topic?.name) || 0) + week.mat[subjectId][i]);
-              weekTotal += week.mat[subjectId][i]
+        if (week.the546[subjectId][i] !== '- 1') {
+          week.the546[subjectId][i].split(',').map(Number).forEach((topicId) => {
+            const topic = topics.find(topic => topic.id === topicId)
+            if (topic) {
+              if (subject.type === 'specific' && !job?.subjects.find(value => value === subject.id)) {
+                temp.weeks[weekId].frequencyMap.set(topic?.name, (temp.weeks[weekId].frequencyMap.get(topic?.name) || 0) + 2);
+                temp.total += 2
+                temp.weeks[weekId].weekTotal += 2
+              } else {
+                frequencyMap.set(topic?.name, (frequencyMap.get(topic?.name) || 0) + 2);
+                weekTotal += 2
+              }
             }
-          }
+          })
+
+
         }
       }
       weekResult.push({ weekTotal, frequencyMap })
