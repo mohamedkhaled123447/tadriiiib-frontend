@@ -68,7 +68,7 @@ function The546() {
     );
   }
   return (
-    <Stack spacing={"2"} align={"center"} justify={"center"} my="10">
+    <Stack spacing={"2"} justify='center' align='center'  my="10">
       <Flex gap={"2"}>
         <Box fontSize="3xl" pb="2">
           {" "}

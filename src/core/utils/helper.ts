@@ -280,11 +280,14 @@ export const the546 = (subjects: Subject[], TopicsDistribution: topicsDis[], mon
       : topics.filter((topic) => topic.subject === subject.id && topic.night)
     const topicsDistribution = TopicsDistribution.find((item) => item.subject === subject.id)?.mat.map(row => [...row]) || [][5]
     month547.weeks.forEach((week) => {
+
       for (let i = 0; i < 7; i++) {
-        if (week.mat[subjectId][i]) {
+        let temp=[]
+        for(let j=2;j<=week.mat[subjectId][i];j+=2) {
           const index = topicsDistribution?.findIndex(row => row[monthId] > 0)
           if (index !== -1) {
             week.the546[subjectId][i] = subjectTopics[index || 0]?.id
+            temp.push(subjectTopics[index || 0]?.id)
             topicsDistribution[index][monthId] -= 2
           }
         }

@@ -82,7 +82,7 @@ function Week546({
             w="36"
             borderRadius={"xl"}
           >
-            الفصائل
+            الفصائل     
           </Center>
           <Center
             p="2"
