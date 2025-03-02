@@ -205,7 +205,7 @@ function Week546({
                 {week.the546
                   .filter((row) => row[dayId] !== "-1")
                   .flatMap((item) => item[dayId].split(",").map(Number))
-                  .map((row) => topics.find((topic) => topic.id === row))
+                  .map((row) => topics.find((topic) => topic?.id === row))
                   .filter((topic) => topic)
                   .map((topic, index) => (
                     <Flex gap={2} key={index}>

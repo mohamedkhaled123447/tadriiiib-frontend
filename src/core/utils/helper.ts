@@ -348,7 +348,7 @@ export const the548 = (subjects: Subject[], month547: disMonth, topics: Topic[],
       for (let i = 0; i < 7; i++) {
         if (week.the546[subjectId][i] !== '- 1') {
           week.the546[subjectId][i].split(',').map(Number).forEach((topicId) => {
-            const topic = topics.find(topic => topic.id === topicId)
+            const topic = topics.find(topic => topic?.id === topicId)
             if (topic) {
               if (subject.type === 'specific' && !job?.subjects.find(value => value === subject.id)) {
                 temp.weeks[weekId].frequencyMap.set(topic?.name, (temp.weeks[weekId].frequencyMap.get(topic?.name) || 0) + 2);
