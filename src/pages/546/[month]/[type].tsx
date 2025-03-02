@@ -31,7 +31,7 @@ function The546() {
   const the546DistributionDay = useMemo(() => {
     return the546(
       daySubjects,
-      dayTopicsDis,
+      dayTopicsDis[curJob],
       dayDistribution.months[Number(month)],
       topics,
       Number(month),
@@ -43,7 +43,7 @@ function The546() {
   const the546DistributionNight = useMemo(() => {
     return the546(
       nightSubjects,
-      nightTopicsDis,
+      nightTopicsDis[curJob],
       nightDistribution.months[Number(month)],
       topics,
       Number(month),

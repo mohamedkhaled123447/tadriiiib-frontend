@@ -30,6 +30,10 @@ interface CalendarContextType {
   setSubjects: Function;
   topics: Topic[];
   setTopics: Function;
+  calenderId: number;
+  setCalenderId: Function;
+  selectedTopics: number[];
+  setSelectedTopics: Function;
 }
 
 const CalendarContext = createContext<CalendarContextType | undefined>(
@@ -40,9 +44,11 @@ export const CalendarProvider = ({ children }: { children: ReactNode }) => {
   const [types, setTypes] = useState<DayType[]>([]);
   const [subjects, setSubjects] = useState<SubjectData[]>([]);
   const [topics, setTopics] = useState<Topic[]>([]);
+  const [selectedTopics, setSelectedTopics] = useState<number[]>([]);
   const [jobs, setJobs] = useState<Job[]>([]);
   const [monthsData, setMonthsData] = useState<interval[]>([]);
   const [months, setMonths] = useState<MonthData[]>([]);
+  const [calenderId, setCalenderId] = useState<number>(0);
   const updateDayType = useCallback(
     (dayId: number, weekId: number, monthId: number, typeId: number) => {
       const updatedMonths = [...months];
@@ -148,6 +154,10 @@ export const CalendarProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     setMonths(JSON.parse(localStorage.getItem("months") || "[]"));
+    setCalenderId(JSON.parse(localStorage.getItem("calenderId") || "0"));
+    setSelectedTopics(
+      JSON.parse(localStorage.getItem("selectedTopics") || "[]")
+    );
     fetchData();
   }, []);
 
@@ -172,6 +182,10 @@ export const CalendarProvider = ({ children }: { children: ReactNode }) => {
         setSubjects,
         topics,
         setTopics,
+        calenderId,
+        setCalenderId,
+        selectedTopics,
+        setSelectedTopics,
       }}
     >
       {children}

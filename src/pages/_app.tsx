@@ -28,7 +28,7 @@ function App({ Component, pageProps: { ...pageProps }, cookies }: any) {
       portalZIndex={40}
     >
       <QueryClientProvider client={queryClient}>
-        <Flex as={"main"} flexDirection="column" h="100vh" overflowY="scroll">
+        <Flex  as={"main"} flexDirection="column" h="100vh" overflowY="scroll">
           <CalendarProvider>
             <DistributionProvider>
               <Component {...pageProps} />

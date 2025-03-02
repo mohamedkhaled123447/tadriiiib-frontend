@@ -22,8 +22,8 @@ interface DistributionContextType {
   dayDistribution: disInterval;
   nightDistribution: disInterval;
   months: MonthData[];
-  dayTopicsDis: topicsDis[];
-  nightTopicsDis: topicsDis[];
+  dayTopicsDis: any ;
+  nightTopicsDis: any;
 }
 
 const DistributionContext = createContext<DistributionContextType | undefined>(
@@ -67,11 +67,11 @@ export const DistributionProvider = ({ children }: { children: ReactNode }) => {
       "night"
     );
   }, [months, nightSubjects, jobs]);
-  const dayTopicsDis: topicsDis[] = useMemo(() => {
-    return dayTopicsDistribution(daySubjects, dayDistribution, topics);
+  const dayTopicsDis: any  = useMemo(() => {
+    return dayTopicsDistribution(daySubjects, dayDistribution, topics,jobs);
   }, [daySubjects, dayDistribution, topics]);
-  const nightTopicsDis: topicsDis[] = useMemo(() => {
-    return nightTopicsDistribution(nightSubjects, nightDistribution, topics);
+  const nightTopicsDis: any = useMemo(() => {
+    return nightTopicsDistribution(nightSubjects, nightDistribution, topics,jobs);
   }, [nightSubjects, nightDistribution, topics]);
 
   useEffect(() => {

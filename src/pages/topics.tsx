@@ -21,8 +21,14 @@ import { Topic } from "@/core/interfaces";
 export default function Home() {
   const router = useRouter();
   const toast = useToast();
-  const { topics, setTopics, subjects } = useCalendar();
-  const [tempTopics, setTempTopics] = useState<Topic[]>([...topics]);
+  const {
+    topics,
+    setTopics,
+    subjects,
+    selectedTopics,
+    setSelectedTopics,
+    calenderId,
+  } = useCalendar();
   const [subject, setSubject] = useState<number>(0);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [editingTopic, setEditingTopic] = useState<Topic | null>(null);
@@ -53,6 +59,9 @@ export default function Home() {
         duration: 1000,
         isClosable: true,
       });
+    } else {
+      const data = await res.json();
+      console.log(data);
     }
   };
   const handleEdit = async (editedtopic: Topic) => {
@@ -99,6 +108,31 @@ export default function Home() {
         duration: 1000,
         isClosable: true,
       });
+    }
+  };
+  const handleSaveTopics = async () => {
+    const res = await fetch(`${BASE_SERVER_URL}/api/interval/${calenderId}/`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        topics: selectedTopics,
+      }),
+    });
+    if (res.ok) {
+      toast({
+        title: "success",
+        description: "تم حفظ الدروس بنجاح",
+        status: "success",
+        duration: 1000,
+        isClosable: true,
+      });
+      localStorage.setItem("selectedTopics", JSON.stringify(selectedTopics));
+      setTopics(
+        selectedTopics.map((tempTopic) =>
+          topics.find((topic) => topic.id === tempTopic)
+        )
+      );
+      router.push("/jobs");
     }
   };
   return (
@@ -187,16 +221,19 @@ export default function Home() {
                     ms={4}
                     size="lg"
                     isChecked={
-                      tempTopics.find((tempTopic) => tempTopic.id === topic.id)
+                      selectedTopics.find((tempTopic) => tempTopic === topic.id)
                         ? true
                         : false
                     }
                     onChange={(e) => {
                       if (e.target.checked) {
-                        setTempTopics((pre) => [...pre, topic]);
+                        setSelectedTopics((pre: number[]) => [
+                          ...pre,
+                          topic.id,
+                        ]);
                       } else {
-                        setTempTopics((pre) =>
-                          pre.filter((tempTopic) => tempTopic.id !== topic.id)
+                        setSelectedTopics((pre: number[]) =>
+                          pre.filter((tempTopic) => tempTopic !== topic.id)
                         );
                       }
                     }}
@@ -226,10 +263,7 @@ export default function Home() {
             borderRadius="full"
             mt={3}
             colorScheme="blue"
-            onClick={() => {
-              setTopics(tempTopics);
-              router.push("/jobs");
-            }}
+            onClick={handleSaveTopics}
           >
             التالي
           </Button>

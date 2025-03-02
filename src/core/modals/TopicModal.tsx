@@ -45,8 +45,8 @@ const TopicModal: React.FC<TopicModalProps> = ({
     night: false,
     level: 0,
     topic_class: "",
-    subject: 0,
-    job: 0,
+    subject: null,
+    job: null,
   });
 
   useEffect(() => {
@@ -63,8 +63,8 @@ const TopicModal: React.FC<TopicModalProps> = ({
         night: false,
         level: 0,
         topic_class: "",
-        subject: 0,
-        job: 0,
+        subject: null,
+        job: null,
       });
     }
   }, [topic]);
@@ -136,10 +136,26 @@ const TopicModal: React.FC<TopicModalProps> = ({
               value={formData.subject}
               onChange={handleChange}
             >
+              <option>غير محدد</option>
               {subjects.map((subject, index) => (
                 <option key={index} value={subject.id}>
-                  {" "}
                   {subject.name}
+                </option>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl mb={3}>
+            <FormLabel>التخصص</FormLabel>
+            <Select
+              borderRadius="full"
+              name="job"
+              value={formData.job}
+              onChange={handleChange}
+            >
+              <option>غير محدد</option>
+              {jobs.map((job, index) => (
+                <option key={index} value={job.id}>
+                  {job.name}
                 </option>
               ))}
             </Select>
@@ -214,22 +230,6 @@ const TopicModal: React.FC<TopicModalProps> = ({
               ليلي
             </Checkbox>
           </FormControl>
-
-          {/* <FormControl mb={3}>
-            <FormLabel>التخصص</FormLabel>
-            <Select
-              borderRadius="full"
-              name="job"
-              value={formData.job}
-              onChange={handleChange}
-            >
-              {jobs.map((job, index) => (
-                <option key={index} value={job.id}>
-                  {job.name}
-                </option>
-              ))}
-            </Select>
-          </FormControl> */}
         </ModalBody>
 
         <ModalFooter>

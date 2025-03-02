@@ -15,6 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { BASE_SERVER_URL } from "@/core/utils/constants/urls";
+import { useCalendar } from "@/context/UseCalendar";
 type Interval = {
   id: number;
   name: string;
@@ -22,6 +23,7 @@ type Interval = {
 
 export default function IntervalsList() {
   const toast = useToast();
+  const { topics } = useCalendar();
   const [intervals, setIntervals] = useState<Interval[]>([]);
   const [intervalName, setIntervalName] = useState<string>("أدخل اسم الفترة");
   const router = useRouter();
@@ -35,7 +37,10 @@ export default function IntervalsList() {
     const res = await fetch(`${BASE_SERVER_URL}/api/interval/`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: intervalName }),
+      body: JSON.stringify({
+        name: intervalName,
+        topics: topics.map((topic) => topic.id),
+      }),
     });
     if (res.ok) {
       const data = await res.json();

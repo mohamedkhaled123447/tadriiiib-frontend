@@ -13,7 +13,7 @@ import {
 import { useRouter } from "next/router";
 import { useCalendar } from "@/context/UseCalendar";
 function ConfirmationDialog({ handleSubmit }: { handleSubmit: Function }) {
-  const { months } = useCalendar();
+  const { months,selectedTopics,calenderId } = useCalendar();
   const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef(null);
@@ -52,6 +52,8 @@ function ConfirmationDialog({ handleSubmit }: { handleSubmit: Function }) {
                 onClick={() => {
                   handleSubmit();
                   localStorage.setItem("months", JSON.stringify(months));
+                  localStorage.setItem("selectedTopics", JSON.stringify(selectedTopics));
+                  localStorage.setItem("calenderId", JSON.stringify(calenderId));
                   router.push("/subjects");
                 }}
                 ms={3}
@@ -62,6 +64,8 @@ function ConfirmationDialog({ handleSubmit }: { handleSubmit: Function }) {
                 colorScheme="red"
                 onClick={() => {
                   localStorage.setItem("months", JSON.stringify(months));
+                  localStorage.setItem("selectedTopics", JSON.stringify(selectedTopics));
+                  localStorage.setItem("calenderId", JSON.stringify(calenderId));
                   router.push("/subjects");
                 }}
                 mx={3}

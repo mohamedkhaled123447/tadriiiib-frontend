@@ -42,6 +42,8 @@ const Calendar = () => {
     generateInterval,
     types,
     setTypes,
+    setCalenderId,
+    setSelectedTopics,
   } = useCalendar();
 
   const router = useRouter();
@@ -109,12 +111,15 @@ const Calendar = () => {
     const url = `${BASE_SERVER_URL}/api/interval/${id}/`;
     const res = await fetch(url);
     if (res.ok) {
+      localStorage.clear();
       const data = await res.json();
       setMonths(data.data);
       setMonthsData(data.monthsData);
       setWeekStart(data.weekStart);
       setTypes(data.types);
       setIntervalName(data.name);
+      setCalenderId(data.id);
+      setSelectedTopics(data.topics);
     } else {
       const errors = await res.json();
       console.log(errors);
@@ -358,7 +363,6 @@ const Calendar = () => {
             ))}
           </Flex>
           <Flex>
-
             <ConfirmationDialog handleSubmit={handleSubmit} />
             <Button
               my={1}

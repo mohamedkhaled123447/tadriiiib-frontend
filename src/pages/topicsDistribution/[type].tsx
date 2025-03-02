@@ -7,14 +7,17 @@ import {
   Heading,
   Center,
   Spinner,
+  Badge,
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useDistribution } from "@/context/UseDistribution";
 import { useCalendar } from "@/context/UseCalendar";
+import { topicsDis } from "@/core/types/types";
 function TopicsDistribution() {
   const router = useRouter();
   const { type } = router.query;
+  const [curJob, setCurJob] = useState<number>(0);
   const {
     daySubjects,
     nightSubjects,
@@ -24,10 +27,11 @@ function TopicsDistribution() {
     dayTopicsDis,
     nightTopicsDis,
   } = useDistribution();
-  const { topics } = useCalendar();
+  const { topics, jobs } = useCalendar();
   const subjects = type === "day" ? daySubjects : nightSubjects;
   const distribution = type === "day" ? dayDistribution : nightDistribution;
-  const TopicsDis = type === "day" ? dayTopicsDis : nightTopicsDis;
+  const TopicsDis: topicsDis[] =
+    type === "day" ? dayTopicsDis[curJob] : nightTopicsDis[curJob];
   if (
     !daySubjects.length ||
     !nightSubjects.length ||
@@ -61,6 +65,20 @@ function TopicsDistribution() {
           {type === "day" ? "(نهاري)" : "(ليلي)"}
         </Box>
       </Flex>
+      <Flex gap={2} wrap="wrap" justify="center">
+        {jobs.map((job, index) => (
+          <Badge
+            cursor="pointer"
+            key={index}
+            borderRadius="full"
+            colorScheme={curJob === index ? "green" : "gray"}
+            p={3}
+            onClick={() => setCurJob(index)}
+          >
+            {job.name}
+          </Badge>
+        ))}
+      </Flex>
       {subjects.map((subject, subjectId) => (
         <>
           <Heading textAlign="right" size="md">
@@ -81,7 +99,10 @@ function TopicsDistribution() {
               {type === "day"
                 ? topics
                     .filter(
-                      (topic) => topic.subject === subject.id && topic.day
+                      (topic) =>
+                        topic.subject === subject.id &&
+                        topic.day &&
+                        (topic.job === jobs[curJob].id || topic.job === null)
                     )
                     .map((topic, index) => (
                       <Box
@@ -97,7 +118,10 @@ function TopicsDistribution() {
                     ))
                 : topics
                     .filter(
-                      (topic) => topic.subject === subject.id && topic.night
+                      (topic) =>
+                        topic.subject === subject.id &&
+                        topic.night &&
+                        (topic.job === jobs[curJob].id || topic.job === null)
                     )
                     .map((topic, index) => (
                       <Box

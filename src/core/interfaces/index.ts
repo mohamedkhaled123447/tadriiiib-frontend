@@ -33,6 +33,6 @@ export interface Topic {
   night: boolean
   level: number
   topic_class: string
-  subject: number
-  job: number
+  subject: any
+  job: any
 }
