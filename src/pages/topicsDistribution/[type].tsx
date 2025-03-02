@@ -100,9 +100,9 @@ function TopicsDistribution() {
                 ? topics
                     .filter(
                       (topic) =>
-                        topic.subject === subject.id &&
-                        topic.day &&
-                        (topic.job === jobs[curJob].id || topic.job === null)
+                        topic?.subject === subject?.id &&
+                        topic?.day &&
+                        (topic?.job === jobs[curJob]?.id || topic?.job === null)
                     )
                     .map((topic, index) => (
                       <Box
@@ -119,9 +119,9 @@ function TopicsDistribution() {
                 : topics
                     .filter(
                       (topic) =>
-                        topic.subject === subject.id &&
-                        topic.night &&
-                        (topic.job === jobs[curJob].id || topic.job === null)
+                        topic?.subject === subject?.id &&
+                        topic?.night &&
+                        (topic?.job === jobs[curJob]?.id || topic?.job === null)
                     )
                     .map((topic, index) => (
                       <Box

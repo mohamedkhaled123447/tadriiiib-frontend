@@ -287,9 +287,9 @@ export const the546 = (subjects: Subject[], TopicsDistribution: topicsDis[], mon
 
   if (!subjects.length || !job) return month547
   subjects.forEach((subject, subjectId) => {
-    const subjectTopics = type === 'day' ? topics.filter((topic) => topic.subject === subject.id && topic.day && (topic.job === job.id || topic.job === null))
-      : topics.filter((topic) => topic.subject === subject.id && topic.night && (topic.job === job.id || topic.job === null))
-    const topicsDistribution = TopicsDistribution.find((item) => item.subject === subject.id)?.mat.map(row => [...row]) || [][5]
+    const subjectTopics = type === 'day' ? topics.filter((topic) => topic?.subject === subject.id && topic?.day && (topic?.job === job.id || topic?.job === null))
+      : topics.filter((topic) => topic?.subject === subject.id && topic?.night && (topic?.job === job.id || topic?.job === null))
+    const topicsDistribution = TopicsDistribution.find((item) => item?.subject === subject.id)?.mat.map(row => [...row]) || [][5]
     month547.weeks.forEach((week) => {
 
       for (let i = 0; i < 7; i++) {
@@ -307,10 +307,9 @@ export const the546 = (subjects: Subject[], TopicsDistribution: topicsDis[], mon
   })
   subjects.forEach((subject, subjectId) => {
     if (subject.type === 'specific' && !job.subjects.find(id => id === subject.id)) {
-      const subjectTopics = type === 'day' ? topics.filter((topic) => topic.job === job.id && topic.day)
+      const subjectTopics = type === 'day' ? topics.filter((topic) => topic?.job === job.id && topic?.day)
       : topics.filter((topic) => topic.job === job.id && topic.night)
       const topicsDistribution = distribute(month547.the547jobs[jobId].totals.reduce((acc, value) => acc + value, 0), subjectTopics.length)
-      console.log(subjectTopics, topicsDistribution,job.name)
       month547.weeks.forEach((week) => {
         for (let i = 0; i < 7; i++) {
           let temp = []
