@@ -155,7 +155,7 @@ export default function Home() {
             ))}
           </Select>
           {topics
-            .filter((topic) => topic.subject === subject)
+            .filter((topic) => topic?.subject === subject)
             .map((topic, index) => (
               <Flex
                 key={index}

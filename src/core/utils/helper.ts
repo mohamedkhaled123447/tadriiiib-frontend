@@ -216,7 +216,7 @@ export const dayTopicsDistribution = (subjects: Subject[], dayDistribution: disI
   jobs.forEach((job, jobId) => {
     const result: topicsDis[] = []
     subjects.forEach((subject, index) => {
-      const subjectTopics = topics.filter((topic) => topic.subject === subject.id && topic.day && (topic.job === job.id || topic.job === null))
+      const subjectTopics = topics.filter((topic) => topic?.subject === subject?.id && topic?.day && (topic?.job === job?.id || topic?.job === null))
       let subjectTotal = dayDistribution.mat[index].reduce((acc, value) => acc + value, 0)
 
       let col: number[] = Array(subjectTopics.length).fill(0)
@@ -251,7 +251,7 @@ export const nightTopicsDistribution = (subjects: Subject[], nightDistribution: 
   jobs.forEach((job, jobId) => {
     const result: topicsDis[] = []
     subjects.forEach((subject, index) => {
-      const subjectTopics = topics.filter((topic) => topic.subject === subject.id && topic.night && (topic.job === job.id || topic.job === null))
+      const subjectTopics = topics.filter((topic) => topic?.subject === subject?.id && topic?.night && (topic?.job === job?.id || topic?.job === null))
       let subjectTotal = nightDistribution.mat[index].reduce((acc, value) => acc + value, 0)
 
       let col: number[] = Array(subjectTopics.length).fill(0)
