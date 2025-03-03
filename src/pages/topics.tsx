@@ -45,8 +45,8 @@ export default function Home() {
         night: topic.night,
         level: topic.level,
         topic_class: topic.topic_class,
-        subject: topic.subject,
-        job: topic.job,
+        subject: topic.subject === -1 ? null : topic.subject,
+        job: topic.job === -1 ? null : topic.job,
       }),
     });
     if (res.ok) {
@@ -77,8 +77,8 @@ export default function Home() {
         night: editedtopic.night,
         level: editedtopic.level,
         topic_class: editedtopic.topic_class,
-        subject: editedtopic.subject,
-        job: editedtopic.job,
+        subject: editedtopic.subject === -1 ? null : editedtopic.subject,
+        job: editedtopic.job === -1 ? null : editedtopic.job,
       }),
     });
     if (res.ok) {
@@ -128,9 +128,9 @@ export default function Home() {
       });
       localStorage.setItem("selectedTopics", JSON.stringify(selectedTopics));
       setTopics(
-        selectedTopics.map((tempTopic) =>
-          topics.find((topic) => topic.id === tempTopic)
-        )
+        selectedTopics
+          .map((tempTopic) => topics.find((topic) => topic.id === tempTopic))
+          .filter((topic) => topic !== undefined)
       );
       router.push("/jobs");
     }

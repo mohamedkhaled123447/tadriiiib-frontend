@@ -45,8 +45,8 @@ const TopicModal: React.FC<TopicModalProps> = ({
     night: false,
     level: 0,
     topic_class: "",
-    subject: null,
-    job: null,
+    subject: -1,
+    job: -1,
   });
 
   useEffect(() => {
@@ -63,8 +63,8 @@ const TopicModal: React.FC<TopicModalProps> = ({
         night: false,
         level: 0,
         topic_class: "",
-        subject: null,
-        job: null,
+        subject: -1,
+        job: -1,
       });
     }
   }, [topic]);
@@ -136,7 +136,7 @@ const TopicModal: React.FC<TopicModalProps> = ({
               value={formData.subject}
               onChange={handleChange}
             >
-              <option>غير محدد</option>
+              <option value={-1}>تد فني تخصصي</option>
               {subjects.map((subject, index) => (
                 <option key={index} value={subject.id}>
                   {subject.name}
@@ -152,7 +152,7 @@ const TopicModal: React.FC<TopicModalProps> = ({
               value={formData.job}
               onChange={handleChange}
             >
-              <option>غير محدد</option>
+              <option value={-1}>كل التخصصات</option>
               {jobs.map((job, index) => (
                 <option key={index} value={job.id}>
                   {job.name}

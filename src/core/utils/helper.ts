@@ -239,6 +239,7 @@ export const dayTopicsDistribution = (subjects: Subject[], dayDistribution: disI
 
         }
       }
+      
       result.push({ subject: subject.id, mat: topicDistribution })
     })
     finalRsult.push(result)
