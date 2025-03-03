@@ -23,6 +23,7 @@ export default function Home() {
   const toast = useToast();
   const {
     topics,
+    jobs,
     setTopics,
     subjects,
     selectedTopics,
@@ -30,6 +31,8 @@ export default function Home() {
     calenderId,
   } = useCalendar();
   const [subject, setSubject] = useState<number>(0);
+  const [job, setJob] = useState<number>(0);
+  const [type, setType] = useState<string>("day");
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [editingTopic, setEditingTopic] = useState<Topic | null>(null);
   const handleAdd = async (topic: Topic) => {
@@ -135,6 +138,35 @@ export default function Home() {
       router.push("/jobs");
     }
   };
+  const filteredTopics = topics.filter((topic) => {
+    if (type === "day") {
+      if (subject === -1) {
+        return topic.job === job && topic.day === true;
+      } else {
+        if (job === -1) {
+          return topic.subject === subject && topic.day === true;
+        } else {
+          return (
+            topic.subject === subject && topic.job === job && topic.day === true
+          );
+        }
+      }
+    } else {
+      if (subject === -1) {
+        return topic.job === job && topic.night === true;
+      } else {
+        if (job === -1) {
+          return topic.subject === subject && topic.night === true;
+        } else {
+          return (
+            topic.subject === subject &&
+            topic.job === job &&
+            topic.night === true
+          );
+        }
+      }
+    }
+  });
   return (
     <Center py={10}>
       <Stack spacing={5} w="90%">
@@ -142,107 +174,126 @@ export default function Home() {
           الدروس
         </Heading>
         <Stack spacing={4} padding={4}>
-          <Select
-            borderRadius="2xl"
-            placeholder="المادة"
-            onChange={(e) => setSubject(Number(e.target.value))}
-          >
-            {subjects.map((subject, index) => (
-              <option key={index} value={subject.id}>
-                {" "}
-                {subject.name}
-              </option>
-            ))}
-          </Select>
-          {topics
-            .filter((topic) => topic?.subject === subject)
-            .map((topic, index) => (
-              <Flex
-                key={index}
-                p={5}
-                px={10}
-                borderWidth="1px"
-                align="center"
-                justify="space-between"
-                bg="white"
-                boxShadow="lg"
-                _hover={{
-                  bg: "blue.50",
-                  transform: "scale(1.02)",
-                  transition: "0.3s ease-in-out",
-                  boxShadow: "xl",
-                }}
-                transition="all 0.3s ease-in-out"
-                borderRadius="2xl"
-                gap={4}
-              >
-                <Box w="48" fontWeight="bold">
-                  {topic.name}
-                </Box>
-                <Box w="48" fontSize="xl">
-                  مستوي {topic.topic_class}
-                </Box>
-                <Box w="48" fontSize="xl">
-                  درجة الصعوبة {topic.level}
-                </Box>
-                <Box>
-                  <Checkbox size="lg" isChecked={topic.day}>
-                    نهاري
-                  </Checkbox>
-                </Box>
-                <Box>
-                  <Checkbox size="lg" isChecked={topic.night}>
-                    ليلي
-                  </Checkbox>
-                </Box>
-                <Box>
-                  <Button
-                    me={3}
-                    size="sm"
-                    colorScheme="green"
-                    borderRadius="full"
-                    onClick={() => {
-                      setEditingTopic(topic);
-                      onOpen();
-                    }}
-                  >
-                    تعديل
-                  </Button>
-                  <Button
-                    borderRadius="full"
-                    onClick={() => handleDelete(topic.id)}
-                    colorScheme="red"
-                    size="sm"
-                  >
-                    حذف
-                  </Button>
-                  <Checkbox
-                    fontWeight="bold"
-                    ms={4}
-                    size="lg"
-                    isChecked={
-                      selectedTopics.find((tempTopic) => tempTopic === topic.id)
-                        ? true
-                        : false
+          <Flex gap={4}>
+            <Select
+              borderRadius="2xl"
+              placeholder="المادة"
+              onChange={(e) => setSubject(Number(e.target.value))}
+            >
+              <option value={-1}>تد فني تخصصي</option>
+              {subjects.map((subject, index) => (
+                <option key={index} value={subject.id}>
+                  {" "}
+                  {subject.name}
+                </option>
+              ))}
+            </Select>
+            <Select
+              borderRadius="2xl"
+              placeholder="الوظيفة"
+              onChange={(e) => setJob(Number(e.target.value))}
+            >
+              <option value={-1}>الكل</option>
+              {jobs.map((job, index) => (
+                <option key={index} value={job.id}>
+                  {job.name}
+                </option>
+              ))}
+            </Select>
+            <Select
+              borderRadius="2xl"
+              placeholder="نهاري/ليلي"
+              onChange={(e) => setType(e.target.value)}
+            >
+              <option value="day">نهاري</option>
+              <option value="night">ليلي</option>
+            </Select>
+          </Flex>
+
+          {filteredTopics.map((topic, index) => (
+            <Flex
+              key={index}
+              p={5}
+              px={10}
+              borderWidth="1px"
+              align="center"
+              justify="space-between"
+              bg="white"
+              boxShadow="lg"
+              _hover={{
+                bg: "blue.50",
+                transform: "scale(1.02)",
+                transition: "0.3s ease-in-out",
+                boxShadow: "xl",
+              }}
+              transition="all 0.3s ease-in-out"
+              borderRadius="2xl"
+              gap={4}
+            >
+              <Box w="48" fontWeight="bold">
+                {topic.name}
+              </Box>
+              <Box w="48" fontSize="xl">
+                مستوي {topic.topic_class}
+              </Box>
+              <Box w="48" fontSize="xl">
+                درجة الصعوبة {topic.level}
+              </Box>
+              <Box>
+                <Checkbox size="lg" isChecked={topic.day}>
+                  نهاري
+                </Checkbox>
+              </Box>
+              <Box>
+                <Checkbox size="lg" isChecked={topic.night}>
+                  ليلي
+                </Checkbox>
+              </Box>
+              <Box>
+                <Button
+                  me={3}
+                  size="sm"
+                  colorScheme="green"
+                  borderRadius="full"
+                  onClick={() => {
+                    setEditingTopic(topic);
+                    onOpen();
+                  }}
+                >
+                  تعديل
+                </Button>
+                <Button
+                  borderRadius="full"
+                  onClick={() => handleDelete(topic.id)}
+                  colorScheme="red"
+                  size="sm"
+                >
+                  حذف
+                </Button>
+                <Checkbox
+                  fontWeight="bold"
+                  ms={4}
+                  size="lg"
+                  isChecked={
+                    selectedTopics.find((tempTopic) => tempTopic === topic.id)
+                      ? true
+                      : false
+                  }
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setSelectedTopics((pre: number[]) => [...pre, topic.id]);
+                    } else {
+                      setSelectedTopics((pre: number[]) =>
+                        pre.filter((tempTopic) => tempTopic !== topic.id)
+                      );
                     }
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        setSelectedTopics((pre: number[]) => [
-                          ...pre,
-                          topic.id,
-                        ]);
-                      } else {
-                        setSelectedTopics((pre: number[]) =>
-                          pre.filter((tempTopic) => tempTopic !== topic.id)
-                        );
-                      }
-                    }}
-                  >
-                    اختيار
-                  </Checkbox>
-                </Box>
-              </Flex>
-            ))}
+                  }}
+                >
+                  اختيار
+                </Checkbox>
+              </Box>
+            </Flex>
+          ))}
         </Stack>
 
         <Stack spacing={2} align="center" justify="center">
