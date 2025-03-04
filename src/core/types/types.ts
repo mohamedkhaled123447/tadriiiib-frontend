@@ -80,7 +80,8 @@ export type disWeek = {
   rows: number[],
   cols: number[],
   mat: number[][],
-  the545: string[][]
+  matjobs: any,
+  the545jobs: any
   the546: string[][]
 }
 /************************************ */

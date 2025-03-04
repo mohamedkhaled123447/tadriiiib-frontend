@@ -34,6 +34,7 @@ function Week({
   limit,
   weekId,
   monthId,
+  jobIndex,
 }: {
   weekId: number;
   monthId: number;
@@ -45,6 +46,7 @@ function Week({
   generalSubjects: Subject[];
   monthName: string;
   limit: number;
+  jobIndex: number;
 }) {
   const router = useRouter();
   const { monthsData, months } = useCalendar();
@@ -67,8 +69,8 @@ function Week({
         totalBoundEducationHours: week.days.map(
           (day) => day.type.boundEducationHours
         ),
-        start: monthsData[0].startDate,
-        end: monthsData[months.length - 1].endDate,
+        start: '2021-01-01',
+        end: '2021-01-07',
       }),
     });
     if (res.ok) {
@@ -76,7 +78,7 @@ function Week({
     }
   };
   return (
-    <Stack spacing={"2"} align={"center"} >
+    <Stack spacing={"2"} align={"center"}>
       <Stack textAlign="center" w="100%">
         <Box p="2" textAlign="center" bg="blackAlpha.200" borderRadius={"xl"}>
           {numberToArabic[week.weekNumber]}
@@ -111,9 +113,21 @@ function Week({
             w="20"
             borderRadius={"xl"}
           ></Box>
-          {weekData.mat
-            .filter((row, rowId) => rowId < limit)
-            .map((row, rowId) => (
+          <Box
+            p="2"
+            textAlign="center"
+            bg="blackAlpha.400"
+            w="20"
+            borderRadius={"xl"}
+          >
+            {weekData.matjobs[jobIndex]?.totals.reduce(
+              (acc: number, value: number) => acc + value,
+              0
+            )}
+          </Box>
+          {weekData.matjobs[jobIndex]?.mat
+            .filter((row: number[], rowId: number) => rowId < limit)
+            .map((row: number[], rowId: number) => (
               <Box
                 key={rowId}
                 p="2"
@@ -145,9 +159,9 @@ function Week({
               {week.totalBoundEducationHours}
             </Box>
           )}
-          {weekData.mat
-            .filter((row, rowId) => rowId >= limit)
-            .map((row, rowId) => (
+          {weekData.matjobs[jobIndex]?.mat
+            .filter((row: number[], rowId: number) => rowId >= limit)
+            .map((row: number[], rowId: number) => (
               <Box
                 key={rowId + limit}
                 p="2"
@@ -204,7 +218,19 @@ function Week({
               w="20"
               borderRadius={"xl"}
             ></Box>
-            {weekData.mat
+            <Box
+              p="2"
+              textAlign="center"
+              bg="blackAlpha.400"
+              w="20"
+              borderRadius={"xl"}
+            >
+              {doc === "545"
+                ? weekData.the545jobs[jobIndex]?.totals[dayId] || "-"
+                : weekData.matjobs[jobIndex]?.totals[dayId] || "-"}
+            </Box>
+
+            {weekData.matjobs[jobIndex]?.mat
               .filter((row: any, rowId: number) => rowId < limit)
               .map((row: any, rowId: number) => (
                 <Box
@@ -216,8 +242,8 @@ function Week({
                   borderRadius={"xl"}
                 >
                   {doc === "545"
-                    ? weekData.the545[rowId][dayId]
-                      ? weekData.the545[rowId][dayId]
+                    ? weekData.the545jobs[jobIndex]?.mat[rowId][dayId]
+                      ? weekData.the545jobs[jobIndex]?.mat[rowId][dayId]
                       : "-"
                     : row[dayId] === 0
                     ? "-"
@@ -244,7 +270,7 @@ function Week({
                   : "-"}
               </Box>
             )}
-            {weekData.mat
+            {weekData.matjobs[jobIndex]?.mat
               .filter((row: any, rowId: number) => rowId >= limit)
               .map((row: any, rowId: number) => (
                 <Box
@@ -256,8 +282,8 @@ function Week({
                   borderRadius={"xl"}
                 >
                   {doc === "545"
-                    ? weekData.the545[rowId + limit][dayId]
-                      ? weekData.the545[rowId + limit][dayId]
+                    ? weekData.the545jobs[jobIndex]?.mat[rowId + limit][dayId]
+                      ? weekData.the545jobs[jobIndex]?.mat[rowId + limit][dayId]
                       : "-"
                     : row[dayId] === 0
                     ? "-"
@@ -272,16 +298,17 @@ function Week({
               borderRadius={"xl"}
             >
               {type === "day"
-                ? weekData.mat.reduce(
+                ? weekData.matjobs[jobIndex]?.mat.reduce(
                     (acc: number, row: any) => (acc += row[dayId]),
                     0
                   ) +
                   week.days[dayId].type.boundEducationHours +
-                  week.days[dayId].type.trainingHours
-                : weekData.mat.reduce(
+                  week.days[dayId].type.trainingHours +
+                  weekData.matjobs[jobIndex]?.totals[dayId]
+                : weekData.matjobs[jobIndex]?.mat.reduce(
                     (acc: number, row: any) => (acc += row[dayId]),
                     0
-                  )}
+                  ) + weekData.matjobs[jobIndex]?.totals[dayId]}
             </Box>
           </Stack>
         ))}

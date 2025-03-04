@@ -1,10 +1,22 @@
-import { Box, Flex, Input, Stack, Button, Heading,Center,Spinner } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Input,
+  Stack,
+  Button,
+  Heading,
+  Center,
+  Spinner,
+  Badge,
+} from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import { useDistribution } from "@/context/UseDistribution";
 import { useRouter } from "next/router";
 import Week from "@/components/547/Week";
-
+import { useCalendar } from "@/context/UseCalendar";
 const TheWeek545 = () => {
+  const { jobs } = useCalendar();
+  const [curJob, setCurJob] = useState<number>(0);
   const router = useRouter();
   const { type, id } = router.query;
   const {
@@ -54,6 +66,20 @@ const TheWeek545 = () => {
           {type === "day" ? "(نهاري)" : "(ليلي)"}
         </Box>
       </Flex>
+      <Flex gap={2} wrap="wrap" justify="center">
+        {jobs.map((job, index) => (
+          <Badge
+            cursor="pointer"
+            key={index}
+            borderRadius="full"
+            colorScheme={curJob === index ? "green" : "gray"}
+            p={3}
+            onClick={() => setCurJob(index)}
+          >
+            {job.name}
+          </Badge>
+        ))}
+      </Flex>
       <Flex gap={4} w="95%">
         <Stack>
           <Box
@@ -84,6 +110,15 @@ const TheWeek545 = () => {
             borderRadius={"xl"}
           >
             أولا :الموضوعات الرئيسية:{" "}
+          </Box>
+          <Box
+            p="2"
+            textAlign="center"
+            bg="blackAlpha.400"
+            w="60"
+            borderRadius={"xl"}
+          >
+            تد فني تخصصي{" "}
           </Box>
           {specificSubjects.map((es: any, index) => (
             <Box
@@ -167,6 +202,7 @@ const TheWeek545 = () => {
                   weekId={weekId}
                   key={weekId}
                   week={week}
+                  jobIndex={curJob}
                   weekData={distribution.months[Number(id)]?.weeks[weekId]}
                   type={type as string}
                   doc="545"

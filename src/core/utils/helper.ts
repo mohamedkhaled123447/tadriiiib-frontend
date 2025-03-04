@@ -48,7 +48,7 @@ const create2DStringArray = (rows: number, cols: number, initialValue: string): 
 };
 
 
-export const daysDistribution = (subjects: Subject[], week: any, weekData: any, type: string) => {
+export const daysDistribution = (jobs: Job[], subjects: Subject[], week: any, weekData: any, type: string) => {
   let rows: number[] = []
   let cols: number[] = []
 
@@ -86,6 +86,7 @@ export const daysDistribution = (subjects: Subject[], week: any, weekData: any, 
       }
     }
   }
+
   let the545 = create2DStringArray(rows.length, cols.length, '')
   for (let i = 0; i < cols.length; i++) {
     let cnt = type === 'day' ? 1 : 4
@@ -103,8 +104,38 @@ export const daysDistribution = (subjects: Subject[], week: any, weekData: any, 
       }
     }
   }
-  // const distributionResult = matrixEvenDistribution(rows, cols);
-  return { mat, cols, rows, the545 }
+  const the545jobs: any = []
+  const theMatjobs: any = []
+  jobs.forEach((job, jobId) => {
+    const tempMat = mat.map(row => [...row])
+    const temp545 = the545.map(row => [...row])
+    const totals: number[] = Array(7).fill(0)
+    const totals545: string[] = Array(7).fill('')
+    tempMat.forEach((row, index) => {
+      if (subjects[index].type==='specific'&&!job.subjects.find(id => id === subjects[index].id)) {
+        row.forEach((value, i) => {
+          totals[i] += value
+          tempMat[index][i] = 0
+        })
+      }
+    })
+    for (let i = 0; i < 7; i++) {
+      const temp = []
+      for (let j = 0; j < rows.length; j++) {
+        if (tempMat[j][i] === 0 && temp545[j][i] !== '') {
+          temp.push(temp545[j][i].split('/')[1])
+          temp545[j][i] = ''
+        }
+      }
+      totals545[i] = totals[i] ? `${totals[i]}/${temp.join(',')}` : ''
+    }
+    the545jobs.push({ mat: temp545, totals: totals545 })
+    theMatjobs.push({
+      mat: tempMat,
+      totals: totals
+    })
+  })
+  return { theMatjobs, cols, rows, the545jobs,mat }
 }
 export const weeksDistribution = (jobs: Job[], subjects: Subject[], month: MonthData, monthData: number[], type: string) => {
   let rows: number[] = []
@@ -186,8 +217,8 @@ export const monthsDistribution = (jobs: Job[], months: MonthData[], subjects: S
   })
   months.forEach((month: any, monthId: number) => {
     month.weeks.forEach((week: any, weekId: number) => {
-      const weekDistribution = daysDistribution(subjects, week, finalDistribution.months[monthId].mat.map((row) => row[weekId]), type)
-      finalDistribution.months[monthId].weeks.push({ cols: weekDistribution.cols, rows: weekDistribution.rows, mat: weekDistribution.mat, the545: weekDistribution.the545, the546: create2DStringArray(subjects.length, 7, ' -1') })
+      const weekDistribution = daysDistribution(jobs, subjects, week, finalDistribution.months[monthId].mat.map((row) => row[weekId]), type)
+      finalDistribution.months[monthId].weeks.push({ cols: weekDistribution.cols, rows: weekDistribution.rows, matjobs: weekDistribution.theMatjobs, the545jobs: weekDistribution.the545jobs, the546: create2DStringArray(subjects.length, 7, ' -1') ,mat:weekDistribution.mat})
     })
   })
   return finalDistribution
@@ -239,7 +270,7 @@ export const dayTopicsDistribution = (subjects: Subject[], dayDistribution: disI
 
         }
       }
-      
+
       result.push({ subject: subject.id, mat: topicDistribution })
     })
     finalRsult.push(result)
@@ -309,7 +340,7 @@ export const the546 = (subjects: Subject[], TopicsDistribution: topicsDis[], mon
   subjects.forEach((subject, subjectId) => {
     if (subject.type === 'specific' && !job.subjects.find(id => id === subject.id)) {
       const subjectTopics = type === 'day' ? topics.filter((topic) => topic?.job === job.id && topic?.day)
-      : topics.filter((topic) => topic.job === job.id && topic.night)
+        : topics.filter((topic) => topic.job === job.id && topic.night)
       const topicsDistribution = distribute(month547.the547jobs[jobId].totals.reduce((acc, value) => acc + value, 0), subjectTopics.length)
       month547.weeks.forEach((week) => {
         for (let i = 0; i < 7; i++) {
