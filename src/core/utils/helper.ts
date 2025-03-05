@@ -112,7 +112,7 @@ export const daysDistribution = (jobs: Job[], subjects: Subject[], week: any, we
     const totals: number[] = Array(7).fill(0)
     const totals545: string[] = Array(7).fill('')
     tempMat.forEach((row, index) => {
-      if (subjects[index].type==='specific'&&!job.subjects.find(id => id === subjects[index].id)) {
+      if (subjects[index].type === 'specific' && !job.subjects.find(id => id === subjects[index].id)) {
         row.forEach((value, i) => {
           totals[i] += value
           tempMat[index][i] = 0
@@ -135,7 +135,7 @@ export const daysDistribution = (jobs: Job[], subjects: Subject[], week: any, we
       totals: totals
     })
   })
-  return { theMatjobs, cols, rows, the545jobs,mat }
+  return { theMatjobs, cols, rows, the545jobs, mat }
 }
 export const weeksDistribution = (jobs: Job[], subjects: Subject[], month: MonthData, monthData: number[], type: string) => {
   let rows: number[] = []
@@ -218,7 +218,7 @@ export const monthsDistribution = (jobs: Job[], months: MonthData[], subjects: S
   months.forEach((month: any, monthId: number) => {
     month.weeks.forEach((week: any, weekId: number) => {
       const weekDistribution = daysDistribution(jobs, subjects, week, finalDistribution.months[monthId].mat.map((row) => row[weekId]), type)
-      finalDistribution.months[monthId].weeks.push({ cols: weekDistribution.cols, rows: weekDistribution.rows, matjobs: weekDistribution.theMatjobs, the545jobs: weekDistribution.the545jobs, the546: create2DStringArray(subjects.length, 7, ' -1') ,mat:weekDistribution.mat})
+      finalDistribution.months[monthId].weeks.push({ cols: weekDistribution.cols, rows: weekDistribution.rows, matjobs: weekDistribution.theMatjobs, the545jobs: weekDistribution.the545jobs, the546: create2DStringArray(subjects.length, 7, ' -1'), mat: weekDistribution.mat })
     })
   })
   return finalDistribution
@@ -245,22 +245,20 @@ const matrixEvenDistribution = (rows: number[], cols: number[]) => {
 export const dayTopicsDistribution = (subjects: Subject[], dayDistribution: disInterval, topics: Topic[], jobs: Job[]) => {
   const finalRsult: any = []
   jobs.forEach((job, jobId) => {
+    const totals: number[] = Array(dayDistribution.months.length).fill(0)
     const result: topicsDis[] = []
     subjects.forEach((subject, index) => {
+      if (subject.type === 'specific' && !job.subjects.find(id => id === subject.id)) {
+        dayDistribution.mat[index].forEach((value, i) => {
+          totals[i] += value
+        })
+      }
       const subjectTopics = topics.filter((topic) => topic?.subject === subject?.id && topic?.day && (topic?.job === job?.id || topic?.job === null))
       let subjectTotal = dayDistribution.mat[index].reduce((acc, value) => acc + value, 0)
 
-      let col: number[] = Array(subjectTopics.length).fill(0)
+      let col: number[] = distribute(subjectTotal, subjectTopics.length)
       let row: number[] = [...dayDistribution.mat[index]]
       const topicDistribution = create2DArray(col.length, row.length, 0)
-      for (let i = 0; i < 100; i++) {
-        for (let j = 0; j < subjectTopics.length; j++) {
-          if (subjectTotal) {
-            col[j] += 2
-            subjectTotal -= 2;
-          }
-        }
-      }
       for (let i = 0; i < col.length; i++) {
         for (let j = 0; j < row.length; j++) {
           const temp = Math.min(row[j], col[i])
@@ -273,7 +271,22 @@ export const dayTopicsDistribution = (subjects: Subject[], dayDistribution: disI
 
       result.push({ subject: subject.id, mat: topicDistribution })
     })
-    finalRsult.push(result)
+    //Specialized technical training
+    const jobTopics = topics.filter((topic) => topic?.job === job?.id && topic?.day)
+    let col: number[] = distribute(totals.reduce((value, acc) => acc + value, 0), jobTopics.length)
+    let row: number[] = [...totals]
+    const topicDistribution = create2DArray(col.length, row.length, 0)
+    for (let i = 0; i < col.length; i++) {
+      for (let j = 0; j < row.length; j++) {
+        const temp = Math.min(row[j], col[i])
+        topicDistribution[i][j] = temp
+        row[j] -= temp
+        col[i] -= temp
+
+      }
+    }
+
+    finalRsult.push({ specializedTopicsDistribution: { topicDistribution, totals }, GeneralTopicsDistribution: result })
   }
   )
   return finalRsult
@@ -281,22 +294,21 @@ export const dayTopicsDistribution = (subjects: Subject[], dayDistribution: disI
 export const nightTopicsDistribution = (subjects: Subject[], nightDistribution: disInterval, topics: Topic[], jobs: Job[]) => {
   const finalRsult: any = []
   jobs.forEach((job, jobId) => {
+    const totals: number[] = Array(nightDistribution.months.length).fill(0)
     const result: topicsDis[] = []
     subjects.forEach((subject, index) => {
+      if (subject.type === 'specific' && !job.subjects.find(id => id === subject.id)) {
+        nightDistribution.mat[index].forEach((value, i) => {
+          totals[i] += value
+        })
+      }
       const subjectTopics = topics.filter((topic) => topic?.subject === subject?.id && topic?.night && (topic?.job === job?.id || topic?.job === null))
       let subjectTotal = nightDistribution.mat[index].reduce((acc, value) => acc + value, 0)
 
-      let col: number[] = Array(subjectTopics.length).fill(0)
+      let col: number[] = distribute(subjectTotal, subjectTopics.length)
       let row: number[] = [...nightDistribution.mat[index]]
       const topicDistribution = create2DArray(col.length, row.length, 0)
-      for (let i = 0; i < 100; i++) {
-        for (let j = 0; j < subjectTopics.length; j++) {
-          if (subjectTotal) {
-            col[j] += 2
-            subjectTotal -= 2;
-          }
-        }
-      }
+
       for (let i = 0; i < col.length; i++) {
         for (let j = 0; j < row.length; j++) {
           const temp = Math.min(row[j], col[i])
@@ -309,25 +321,39 @@ export const nightTopicsDistribution = (subjects: Subject[], nightDistribution: 
       result.push({ subject: subject.id, mat: topicDistribution })
 
     })
-    finalRsult.push(result)
+    //Specialized technical training
+    const jobTopics = topics.filter((topic) => topic?.job === job?.id && topic?.night)
+    let col: number[] = distribute(totals.reduce((value, acc) => acc + value, 0), jobTopics.length)
+    let row: number[] = [...totals]
+    const topicDistribution = create2DArray(col.length, row.length, 0)
+    for (let i = 0; i < col.length; i++) {
+      for (let j = 0; j < row.length; j++) {
+        const temp = Math.min(row[j], col[i])
+        topicDistribution[i][j] = temp
+        row[j] -= temp
+        col[i] -= temp
+
+      }
+    }
+    finalRsult.push({ specializedTopicsDistribution: { topicDistribution, totals }, GeneralTopicsDistribution: result })
   }
   )
   return finalRsult
 }
 
-export const the546 = (subjects: Subject[], TopicsDistribution: topicsDis[], month547: disMonth, topics: Topic[], monthId: number, type: string, job: Job, jobId: number) => {
+export const the546 = (subjects: Subject[], TopicsDistribution: any, month547: disMonth, topics: Topic[], monthId: number, type: string, job: Job, jobId: number) => {
 
   if (!subjects.length || !job) return month547
   subjects.forEach((subject, subjectId) => {
     const subjectTopics = type === 'day' ? topics.filter((topic) => topic?.subject === subject.id && topic?.day && (topic?.job === job.id || topic?.job === null))
       : topics.filter((topic) => topic?.subject === subject.id && topic?.night && (topic?.job === job.id || topic?.job === null))
-    const topicsDistribution = TopicsDistribution.find((item) => item?.subject === subject.id)?.mat.map(row => [...row]) || [][5]
+    const topicsDistribution = TopicsDistribution.GeneralTopicsDistribution.find((item:any) => item?.subject === subject.id)?.mat.map((row: number[]) => [...row]) || [][5]
     month547.weeks.forEach((week) => {
 
       for (let i = 0; i < 7; i++) {
         let temp = []
         for (let j = 2; j <= week.mat[subjectId][i]; j += 2) {
-          const index = topicsDistribution?.findIndex(row => row[monthId] > 0)
+          const index = topicsDistribution?.findIndex((row: number[]) => row[monthId] > 0)
           if (index !== -1) {
             temp.push(subjectTopics[index || 0]?.id)
             topicsDistribution[index][monthId] -= 2
